@@ -1,0 +1,16 @@
+*.uv*
+*.o
+*.d
+*.crf
+*.axf
+*.iex
+*.lst
+*.htm
+*.lnp
+*.map
+*.pla
+*.tra
+*.dep
+*.bak
+*.plg
+!texas.o
