@@ -14,3 +14,4 @@
 *.bak
 *.plg
 !texas.o
+!Lab10.uvproj
