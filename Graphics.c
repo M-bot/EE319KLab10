@@ -30,7 +30,7 @@ Matrix4 scale(Vector3 scalar) {
 
 Vector2 project(Vector3 v, Matrix4 proj, uint32_t width, uint32_t height) {
 	Vector3 nv = transform(v,proj);
-	return (Vector2){{nv.V[0]*width + width/2,nv.V[1]*height + height/2}};
+	return (Vector2){{nv.V[0]*width + width/2,-nv.V[1]*height + height/2}};
 }
 
 Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
@@ -42,28 +42,104 @@ Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
 
 
 void drawPoint(Vector2 point, int16_t color) {
-		ST7735_DrawPixel(point.V[0],point.V[1],color);
+	ST7735_DrawPixel(point.V[0],point.V[1],color);
 }
 
 void drawLine(Vector2 point1, Vector2 point2,int16_t color) {
-    int x0 = (int)point1.V[0];
-    int y0 = (int)point1.V[1];
+	int x0 = (int)point1.V[0];
+  int y0 = (int)point1.V[1];
 	
-    int x1 = (int)point2.V[0];
-    int y1 = (int)point2.V[1];
+	int x1 = (int)point2.V[0];
+	int y1 = (int)point2.V[1];
             
-    float dx = fabs(x1 - x0);
-    float dy = fabs(y1 - y0);
-    float sx = (x0 < x1) ? 1 : -1;
-    float sy = (y0 < y1) ? 1 : -1;
-    float err = dx - dy;
+	float dx = fabs(x1 - x0);
+	float dy = fabs(y1 - y0);
+	float sx = (x0 < x1) ? 1 : -1;
+	float sy = (y0 < y1) ? 1 : -1;
+	float err = dx - dy;
 
-    while (1) {
-        drawPoint((Vector2){{x0, y0}},color);
+	while (1) {
+		drawPoint((Vector2){{x0, y0}},color);
 
-        if ((x0 == x1) && (y0 == y1)) break;
-        float e2 = 2 * err;
-        if (e2 > -dy) { err -= dy; x0 += sx; }
-        if (e2 < dx) { err += dx; y0 += sy; }
-    }
+		if ((x0 == x1) && (y0 == y1)) break;
+		float e2 = 2 * err;
+		if (e2 > -dy) { err -= dy; x0 += sx; }
+		if (e2 < dx) { err += dx; y0 += sy; }
+	}
+}
+
+float clamp(float value) {
+	value = value < 1 ? value : 1;
+	return value > 0 ? value : 0;
+}
+
+float interpolate(float min, float max, float gradient) {
+   return min + (max - min) * clamp(gradient);
+}
+
+void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t color) {
+	float gradient1 = pa.V[1] != pb.V[1] ? (y - pa.V[1]) / (pb.V[1] - pa.V[1]) : 1;
+	float gradient2 = pc.V[1] != pd.V[1] ? (y - pc.V[1]) / (pd.V[1] - pc.V[1]) : 1;
+				 
+	int sx = (int)interpolate(pa.V[0], pb.V[0], gradient1);
+	int ex = (int)interpolate(pc.V[0], pd.V[0], gradient2);
+
+	for (int x = sx; x < ex; x++)
+	{
+		drawPoint((Vector2){{x, y}}, color);
+	}
+}
+
+void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {
+	if (p1.V[1] > p2.V[1])
+	{
+		Vector2 temp = p2;
+		p2 = p1;
+		p1 = temp;
+	}
+	if (p2.V[1] > p3.V[1])
+	{
+		Vector2 temp = p2;
+		p2 = p3;
+		p3 = temp;
+	}
+	if (p1.V[1] > p2.V[1])
+	{
+		Vector2 temp = p2;
+		p2 = p1;
+		p1 = temp;
+	}
+	
+	float dP1P2, dP1P3;
+	
+	if (p2.V[1] - p1.V[1] > 0)
+		dP1P2 = (p2.V[0] - p1.V[0]) / (p2.V[1] - p1.V[1]);
+	else
+		dP1P2 = 0;
+	
+	if (p3.V[1] - p1.V[1] > 0)
+		dP1P3 = (p3.V[0] - p1.V[0]) / (p3.V[1] - p1.V[1]);
+	else
+		dP1P3 = 0;
+	
+	if (dP1P2 > dP1P3)
+	{
+		for (int y = (int)p1.V[1]; y <= (int)p3.V[1]; y++)
+		{
+			if (y < p2.V[1])
+				drawScanline(y, p1, p3, p1, p2, color);
+			else
+				drawScanline(y, p1, p3, p2, p3, color);
+		}
+	}
+	else
+	{
+		for (int y = (int)p1.V[1]; y <= (int)p3.V[1]; y++)
+		{
+			if (y < p2.V[1])
+				drawScanline(y, p1, p2, p1, p3, color);
+			else
+				drawScanline(y, p2, p3, p1, p3, color);
+		}
+	}
 }

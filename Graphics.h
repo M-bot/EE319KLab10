@@ -7,3 +7,7 @@ void drawPoint(Vector2 point, int16_t color);
 void drawLine(Vector2 point1, Vector2 point2, int16_t color);
 Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up);
 Matrix4 pers(float fovx, float fovy, float zfar, float znear);
+float clamp(float value);
+float interpolate(float min, float max, float gradient);
+void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t color);
+void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color);

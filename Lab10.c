@@ -19,7 +19,7 @@ int main(void) {
 	Matrix4 rotZ = rotate(0,2);
 	
 
-	Vector3 eye = {{100,50,100}};
+	Vector3 eye = {{100,100,100}};
 	Vector3 target = {{0,0,0}};
 	Vector3 up = {{0,1,0}};
 	Matrix4 camera = lookAt(eye,target,up);
@@ -38,9 +38,7 @@ int main(void) {
 			Vector2 point1 = project(cube[(int)faces[x].V[0]],mvp,width,height);
 			Vector2 point2 = project(cube[(int)faces[x].V[1]],mvp,width,height);
 			Vector2 point3 = project(cube[(int)faces[x].V[2]],mvp,width,height);
-			drawLine(point1,point2,ST7735_YELLOW);
-			drawLine(point2,point3,ST7735_YELLOW);
-			drawLine(point3,point1,ST7735_YELLOW);
+			drawTriangle(point1,point2,point3,x % 2 == 0 ? ST7735_YELLOW : ST7735_MAGENTA);
 
 		}
 		Output_Clear();
