@@ -21,36 +21,36 @@ Matrix4 rotate(float degrees, int axis) {
 }
 
 Matrix4 translate(Vector3 translation) {
-	return (Matrix4){{{1,0,0,translation.V[0]},{0,1,0,translation.V[1]},{0,0,1,translation.V[2]},{0,0,0,1}}};
+	return (Matrix4){{{1,0,0,translation.vX},{0,1,0,translation.vY},{0,0,1,translation.vZ},{0,0,0,1}}};
 }
 
 Matrix4 scale(Vector3 scalar) {
-	return (Matrix4){{{scalar.V[0],0,0,0},{0,scalar.V[1],0,0},{0,0,scalar.V[2],0},{0,0,0,1}}};
+	return (Matrix4){{{scalar.vX,0,0,0},{0,scalar.vY,0,0},{0,0,scalar.vZ,0},{0,0,0,1}}};
 }
 
 Vector2 project(Vector3 v, Matrix4 proj, uint32_t width, uint32_t height) {
 	Vector3 nv = transform(v,proj);
-	return (Vector2){{nv.V[0]*width + width/2,-nv.V[1]*height + height/2}};
+	return (Vector2){{nv.vX*width + width/2,-nv.vY*height + height/2}};
 }
 
 Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
 	Vector3 zaxis = normal(subtract(eye,target));
 	Vector3 xaxis = normal(cross(up, zaxis));
 	Vector3 yaxis = cross(zaxis, xaxis);
-	return (Matrix4){{{xaxis.V[0],yaxis.V[0],zaxis.V[0],0},{xaxis.V[1],yaxis.V[1],zaxis.V[1],0},{xaxis.V[2],yaxis.V[2],zaxis.V[2],0},{-dot(xaxis,eye),-dot(yaxis,eye),-dot(zaxis,eye),1}}};
+	return (Matrix4){{{xaxis.vX,yaxis.vX,zaxis.vX,0},{xaxis.vY,yaxis.vY,zaxis.vY,0},{xaxis.vZ,yaxis.vZ,zaxis.vZ,0},{-dot(xaxis,eye),-dot(yaxis,eye),-dot(zaxis,eye),1}}};
 }
 
 
 void drawPoint(Vector2 point, int16_t color) {
-	ST7735_DrawPixel(point.V[0],point.V[1],color);
+	ST7735_DrawPixel(point.vX,point.vY,color);
 }
 
 void drawLine(Vector2 point1, Vector2 point2,int16_t color) {
-	int x0 = (int)point1.V[0];
-  int y0 = (int)point1.V[1];
+	int x0 = (int)point1.vX;
+  int y0 = (int)point1.vY;
 	
-	int x1 = (int)point2.V[0];
-	int y1 = (int)point2.V[1];
+	int x1 = (int)point2.vX;
+	int y1 = (int)point2.vY;
             
 	float dx = fabs(x1 - x0);
 	float dy = fabs(y1 - y0);
@@ -78,11 +78,11 @@ float interpolate(float min, float max, float gradient) {
 }
 
 void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t color) {
-	float gradient1 = pa.V[1] != pb.V[1] ? (y - pa.V[1]) / (pb.V[1] - pa.V[1]) : 1;
-	float gradient2 = pc.V[1] != pd.V[1] ? (y - pc.V[1]) / (pd.V[1] - pc.V[1]) : 1;
+	float gradient1 = pa.vY != pb.vY ? (y - pa.vY) / (pb.vY - pa.vY) : 1;
+	float gradient2 = pc.vY != pd.vY ? (y - pc.vY) / (pd.vY - pc.vY) : 1;
 				 
-	int sx = (int)interpolate(pa.V[0], pb.V[0], gradient1);
-	int ex = (int)interpolate(pc.V[0], pd.V[0], gradient2);
+	int sx = (int)interpolate(pa.vX, pb.vX, gradient1);
+	int ex = (int)interpolate(pc.vX, pd.vX, gradient2);
 
 	for (int x = sx; x < ex; x++)
 	{
@@ -91,19 +91,19 @@ void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t
 }
 
 void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {
-	if (p1.V[1] > p2.V[1])
+	if (p1.vY > p2.vY)
 	{
 		Vector2 temp = p2;
 		p2 = p1;
 		p1 = temp;
 	}
-	if (p2.V[1] > p3.V[1])
+	if (p2.vY > p3.vY)
 	{
 		Vector2 temp = p2;
 		p2 = p3;
 		p3 = temp;
 	}
-	if (p1.V[1] > p2.V[1])
+	if (p1.vY > p2.vY)
 	{
 		Vector2 temp = p2;
 		p2 = p1;
@@ -112,21 +112,21 @@ void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {
 	
 	float dP1P2, dP1P3;
 	
-	if (p2.V[1] - p1.V[1] > 0)
-		dP1P2 = (p2.V[0] - p1.V[0]) / (p2.V[1] - p1.V[1]);
+	if (p2.vY - p1.vY > 0)
+		dP1P2 = (p2.vX - p1.vX) / (p2.vY - p1.vY);
 	else
 		dP1P2 = 0;
 	
-	if (p3.V[1] - p1.V[1] > 0)
-		dP1P3 = (p3.V[0] - p1.V[0]) / (p3.V[1] - p1.V[1]);
+	if (p3.vY - p1.vY > 0)
+		dP1P3 = (p3.vX - p1.vX) / (p3.vY - p1.vY);
 	else
 		dP1P3 = 0;
 	
 	if (dP1P2 > dP1P3)
 	{
-		for (int y = (int)p1.V[1]; y <= (int)p3.V[1]; y++)
+		for (int y = (int)p1.vY; y <= (int)p3.vY; y++)
 		{
-			if (y < p2.V[1])
+			if (y < p2.vY)
 				drawScanline(y, p1, p3, p1, p2, color);
 			else
 				drawScanline(y, p1, p3, p2, p3, color);
@@ -134,9 +134,9 @@ void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {
 	}
 	else
 	{
-		for (int y = (int)p1.V[1]; y <= (int)p3.V[1]; y++)
+		for (int y = (int)p1.vY; y <= (int)p3.vY; y++)
 		{
-			if (y < p2.V[1])
+			if (y < p2.vY)
 				drawScanline(y, p1, p2, p1, p3, color);
 			else
 				drawScanline(y, p2, p3, p1, p3, color);

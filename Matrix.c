@@ -29,7 +29,7 @@ void print(Matrix4 m) {
 }
 
 Vector3 transform(Vector3 v3, Matrix4 m) {
-	Vector4 v = {{(v3).V[0],(v3).V[1],(v3).V[2],1}};
+	Vector4 v = {{(v3).vX,(v3).vY,(v3).vZ,1}};
 	Vector4 o;
 	for(int r = 0; r < 4; r++) {
 		o.V[r] = 0;
@@ -38,23 +38,23 @@ Vector3 transform(Vector3 v3, Matrix4 m) {
 		}
 	}
 	
-	return (Vector3){{o.V[0]/o.V[3],o.V[1]/o.V[3],o.V[2]/o.V[3]}};
+	return (Vector3){{o.vX/o.vW,o.vY/o.vW,o.vZ/o.vW}};
 }
 
 
 Vector3 normal(Vector3 p) {
-	float w = sqrt(p.V[0]*p.V[0]+p.V[1]*p.V[1]+p.V[2]*p.V[2]);
-	return (Vector3){{p.V[0]/w,p.V[1]/w,p.V[2]/w}};
+	float w = sqrt(p.vX*p.vX+p.vY*p.vY+p.vZ*p.vZ);
+	return (Vector3){{p.vX/w,p.vY/w,p.vZ/w}};
 }
 
 float dot(Vector3 a, Vector3 b) {
-	return a.V[0]*b.V[0]+a.V[1]*b.V[1]+a.V[2]*b.V[2];
+	return a.vX*b.vX+a.vY*b.vY+a.vZ*b.vZ;
 }
 
 Vector3 cross(Vector3 a, Vector3 b) {
-  return (Vector3){{a.V[1]*b.V[2]-a.V[2]*b.V[1],a.V[2]*b.V[0]-a.V[0]*b.V[2],a.V[0]*b.V[1]-a.V[1]*b.V[0]}};
+  return (Vector3){{a.vY*b.vZ-a.vZ*b.vY,a.vZ*b.vX-a.vX*b.vZ,a.vX*b.vY-a.vY*b.vX}};
 }
 
 Vector3 subtract(Vector3 a,Vector3 b) {
-	return (Vector3){{a.V[0]-b.V[0],a.V[1]-b.V[1],a.V[2]-b.V[2]}};
+	return (Vector3){{a.vX-b.vX,a.vY-b.vY,a.vZ-b.vZ}};
 }

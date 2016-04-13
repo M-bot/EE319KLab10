@@ -1,4 +1,8 @@
 #include <stdint.h>
+#define vX V[0]
+#define vY V[1]
+#define vZ V[2]
+#define vW V[3]
 struct Matrix4 {
 	float M[4][4];
 };
