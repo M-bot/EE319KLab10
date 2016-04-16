@@ -1,3 +1,4 @@
+void sendScreen(void);
 Matrix4 ortho(float width, float height, float zfar, float znear);
 Vector2 project(Vector3 v, Matrix4 proj, uint32_t width, uint32_t height);
 Matrix4 rotate(float degrees, int axis);

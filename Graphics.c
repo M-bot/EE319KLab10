@@ -3,6 +3,17 @@
 #include "ST7735.h"
 #include <math.h>
 #define PI 3.141592654
+#define WIDTH 160
+#define HEIGHT 86
+
+uint16_t screen[HEIGHT*WIDTH];
+
+void sendScreen(void) {
+	ST7735_DrawBitmap(0,HEIGHT,screen,WIDTH,HEIGHT);
+	for(int x = 0; x < HEIGHT*WIDTH; x++)
+		screen[x] = 0;
+}
+
 Matrix4 ortho(float width, float height, float zfar, float znear) {
 	return (Matrix4){{{1/width,0,0,0},{0,1/height,0,0},{0,0,-2/(zfar-znear),0},{0,0,-(zfar+znear)/(zfar-znear),1}}};
 }
@@ -30,7 +41,7 @@ Matrix4 scale(Vector3 scalar) {
 
 Vector2 project(Vector3 v, Matrix4 proj, uint32_t width, uint32_t height) {
 	Vector3 nv = transform(v,proj);
-	return (Vector2){{nv.vX*width + width/2,-nv.vY*height + height/2}};
+	return (Vector2){{nv.vX*width + width/2,nv.vY*height + height/2}};
 }
 
 Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
@@ -42,7 +53,7 @@ Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
 
 
 void drawPoint(Vector2 point, int16_t color) {
-	ST7735_DrawPixel(point.vX,point.vY,color);
+	screen[(int)(point.vY*WIDTH+point.vX)] = color;
 }
 
 void drawLine(Vector2 point1, Vector2 point2,int16_t color) {
@@ -84,10 +95,13 @@ void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t
 	int sx = (int)interpolate(pa.vX, pb.vX, gradient1);
 	int ex = (int)interpolate(pc.vX, pd.vX, gradient2);
 
-	for (int x = sx; x < ex; x++)
-	{
-		drawPoint((Vector2){{x, y}}, color);
+	for(int x = sx; x < ex; x++) {
+		drawPoint((Vector2){{x,y}},color);
 	}
+	/*if(ex < sx)
+		ST7735_DrawFastHLine(ex, y, sx-ex, color);
+	else
+		ST7735_DrawFastHLine(sx, y, ex-sx, color);*/
 }
 
 void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {

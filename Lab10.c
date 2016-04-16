@@ -8,7 +8,7 @@
 
 
 int main(void) {
-	int height = 128;
+	int height = 86;
 	int width = 160;
 	Vector3 cube[8] = {{{-1,2,1}},{{1,2,1}},{{-1,-1,1}},{{1,-1,1}},{{-1,2,-1}},{{1,2,-1}},{{-1,-1,-1}},{{1,-1,-1}}};
 	Vector3 faces[12] = {{{0,2,1}},{{1,2,3}},{{1,3,7}},{{1,7,5}},{{0,1,4}},{{1,5,4}},{{2,6,3}},{{3,6,7}},{{6,2,0}},{{0,4,6}},{{4,5,7}},{{4,7,6}}};
@@ -30,6 +30,7 @@ int main(void) {
 	TExaS_Init();         // Bus clock is 80 MHz 
   ST7735_InitR(INITR_REDTAB);
 	ST7735_SetRotation(1);
+	ST7735_FillRect(0, 86, 160, 42, ST7735_WHITE); 
 	while(1) {
 		
 		for(int x = 0; x < 8; x++) {
@@ -47,6 +48,7 @@ int main(void) {
 			drawTriangle(point1,point2,point3,x % 3 == 0 ? ST7735_BLUE : x % 3 == 1 ? ST7735_GREEN : ST7735_RED);
 
 		}
-		Output_Clear();
+		sendScreen();
+		//Output_Clear();
 	}
 }
