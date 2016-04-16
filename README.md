@@ -6,7 +6,7 @@ The _To Be Named_ project combines the aspects of Labs 1-9 into a video game. Th
 Current Roadmap:
 - [x] Create Repository
 - [x] Obtain Lab 10 Starter Files
-- [ ] Implement 3D rendering
+- [ ] Implement 3D rendering (Progress can be seen [here](https://www.youtube.com/watch?v=6jVMg5p2KdE))
 - [ ] Select game idea
 - [ ] Create sprites
 - [ ] Implement input (buttons and slide pot) logic
