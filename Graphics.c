@@ -19,7 +19,12 @@ Matrix4 ortho(float width, float height, float zfar, float znear) {
 }
 
 Matrix4 pers(float fovx, float fovy, float zfar, float znear) {
-	return (Matrix4){{{atan(fovx/2),0,0,0},{0,atan(fovy/2),0,0},{0,0,-(zfar+znear)/(zfar-znear),-1},{0,0,-2*(zfar*znear)/(zfar-znear),0}}};
+	float S = 1/(tan(fovx/2*PI/180));
+	return (Matrix4){{
+		{S,0,0,0},
+		{0,S,0,0},
+		{0,0,-zfar/(zfar-znear),-1},
+		{0,0,-zfar*znear/(zfar-znear),0}}};
 }
 
 Matrix4 rotate(float degrees, int axis) {
@@ -39,20 +44,28 @@ Matrix4 scale(Vector3 scalar) {
 	return (Matrix4){{{scalar.vX,0,0,0},{0,scalar.vY,0,0},{0,0,scalar.vZ,0},{0,0,0,1}}};
 }
 
-Vector2 project(Vector3 v, Matrix4 proj, uint32_t width, uint32_t height) {
+uint8_t project(Vector2 * projVector, Vector3 v, Matrix4 proj, uint32_t width, uint32_t height) {
 	Vector3 nv = transform(v,proj);
-	return (Vector2){{nv.vX*width + width/2,nv.vY*height + height/2}};
+	if (nv.vX < -1 || nv.vX > 1 || nv.vY < -1 || nv.vY > 1 || nv.vZ < -1 || nv.vZ > 1) return 1; 
+	projVector->vX = nv.vX*width + width/2;
+	projVector->vY = nv.vY*height + height/2;
+	return 0;
 }
 
-Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
-	Vector3 zaxis = normal(subtract(eye,target));
-	Vector3 xaxis = normal(cross(up, zaxis));
-	Vector3 yaxis = cross(zaxis, xaxis);
-	return (Matrix4){{{xaxis.vX,yaxis.vX,zaxis.vX,0},{xaxis.vY,yaxis.vY,zaxis.vY,0},{xaxis.vZ,yaxis.vZ,zaxis.vZ,0},{-dot(xaxis,eye),-dot(yaxis,eye),-dot(zaxis,eye),1}}};
+Matrix4 lookAt(Vector3 cameraPosition, Vector3 cameraTarget, Vector3 globalUp) {
+	Vector3 cameraDirection = normal(subtract(cameraPosition,cameraTarget));
+	Vector3 cameraRight = normal(cross(globalUp, cameraDirection));
+	Vector3 cameraUp = cross(cameraDirection, cameraRight);
+	return (Matrix4){{
+		{cameraRight.vX										,cameraUp.vX									,cameraDirection.vX										,0},
+		{cameraRight.vY										,cameraUp.vY									,cameraDirection.vY										,0},
+		{cameraRight.vZ										,cameraUp.vZ									,cameraDirection.vZ										,0},
+		{-dot(cameraRight,cameraPosition)	,-dot(cameraUp,cameraPosition),-dot(cameraDirection,cameraPosition)	,1}}};
 }
 
 
 void drawPoint(Vector2 point, int16_t color) {
+	if(point.vY >= HEIGHT || point.vY < 0 || point.vX >= WIDTH || point.vX < 0) return;
 	screen[(int)(point.vY*WIDTH+point.vX)] = color;
 }
 

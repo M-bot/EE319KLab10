@@ -31,3 +31,4 @@ Vector3 normal(Vector3 p);
 float dot(Vector3 a, Vector3 b);
 Vector3 cross(Vector3 a, Vector3 b);
 Vector3 subtract(Vector3 a,Vector3 b);
+Vector3 add(Vector3 a,Vector3 b);

@@ -58,3 +58,7 @@ Vector3 cross(Vector3 a, Vector3 b) {
 Vector3 subtract(Vector3 a,Vector3 b) {
 	return (Vector3){{a.vX-b.vX,a.vY-b.vY,a.vZ-b.vZ}};
 }
+
+Vector3 add(Vector3 a,Vector3 b) {
+	return (Vector3){{a.vX+b.vX,a.vY+b.vY,a.vZ+b.vZ}};
+}
