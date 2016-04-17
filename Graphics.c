@@ -3,8 +3,8 @@
 #include "ST7735.h"
 #include <math.h>
 #define PI 3.141592654
-#define WIDTH 160
-#define HEIGHT 86
+#define WIDTH 80
+#define HEIGHT 80
 
 uint16_t screen[HEIGHT*WIDTH];
 
@@ -57,12 +57,17 @@ Matrix4 lookAt(Vector3 cameraPosition, Vector3 cameraTarget, Vector3 globalUp) {
 	Vector3 cameraRight = normal(cross(globalUp, cameraDirection));
 	Vector3 cameraUp = cross(cameraDirection, cameraRight);
 	return (Matrix4){{
-		{cameraRight.vX										,cameraUp.vX									,cameraDirection.vX										,0},
-		{cameraRight.vY										,cameraUp.vY									,cameraDirection.vY										,0},
-		{cameraRight.vZ										,cameraUp.vZ									,cameraDirection.vZ										,0},
-		{-dot(cameraRight,cameraPosition)	,-dot(cameraUp,cameraPosition),-dot(cameraDirection,cameraPosition)	,1}}};
+		{cameraRight.vX                   ,cameraUp.vX                  ,cameraDirection.vX                   ,0},
+		{cameraRight.vY                   ,cameraUp.vY                  ,cameraDirection.vY                   ,0},
+		{cameraRight.vZ                   ,cameraUp.vZ                  ,cameraDirection.vZ                   ,0},
+		{-dot(cameraRight,cameraPosition) ,-dot(cameraUp,cameraPosition),-dot(cameraDirection,cameraPosition) ,1}}};
 }
 
+Matrix4 FPSView(Vector3 cameraPosition, float pitch, float yaw) {
+	Vector3 cameraFront = {{cos(pitch*PI/180)*cos(yaw*PI/180),sin(pitch*PI/180),cos(pitch*PI/180)*sin(yaw*PI/180)}};
+	cameraFront = normal(cameraFront);
+	return lookAt(cameraPosition,subtract(cameraPosition,cameraFront),(Vector3){{0,1,0}});
+}
 
 void drawPoint(Vector2 point, int16_t color) {
 	if(point.vY >= HEIGHT || point.vY < 0 || point.vX >= WIDTH || point.vX < 0) return;
@@ -111,10 +116,6 @@ void drawScanline(int y, Vector2 pa, Vector2 pb, Vector2 pc, Vector2 pd, int16_t
 	for(int x = sx; x < ex; x++) {
 		drawPoint((Vector2){{x,y}},color);
 	}
-	/*if(ex < sx)
-		ST7735_DrawFastHLine(ex, y, sx-ex, color);
-	else
-		ST7735_DrawFastHLine(sx, y, ex-sx, color);*/
 }
 
 void drawTriangle(Vector2 p1, Vector2 p2, Vector2 p3, int16_t color) {

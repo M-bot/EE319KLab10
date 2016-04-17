@@ -6,7 +6,8 @@ The _To Be Named_ project combines the aspects of Labs 1-9 into a video game. Th
 Current Roadmap:
 - [x] Create Repository
 - [x] Obtain Lab 10 Starter Files
-- [ ] Implement 3D rendering (Progress can be seen [here](https://www.youtube.com/watch?v=6jVMg5p2KdE))
+- [x] ~~Implement 3D rendering (Progress can be seen [here](https://www.youtube.com/watch?v=6jVMg5p2KdE))~~
+- [ ] Implement 2D rendering
 - [ ] Select game idea
 - [ ] Create sprites
 - [ ] Implement input (buttons and slide pot) logic
@@ -16,3 +17,6 @@ Current Roadmap:
 - [ ] Quality Assurance & Testing
 
 Created by Miguel Obregon and Bryce Cotner
+
+
+After a week of development we've determined a 3D engine for TM4C123* would be very limited or require months of optimizations due to memory constraints (and skill constraints). The TM4C123 family only has 32K RAM while a decent 3D engine needs at least 1M RAM. 
