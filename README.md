@@ -1,14 +1,14 @@
-# Lab 10 - TBN
+# Lab 10 - The Wiring of Issac (tentative)
 Final Project for EE319K (Introduction to Embedded Systems), as of Spring 2016
 
-The _To Be Named_ project combines the aspects of Labs 1-9 into a video game. The project includes an analog and digital input driver, audio driver, LCD driver, and graphics engine. At the moment a game idea hasn't not been selected. 
+The _The Wiring of Issac_ project combines the aspects of Labs 1-9 into a video game based off The Binding of Issac. The project includes an analog and digital input driver, audio driver, LCD driver, and graphics engine.
 
 Current Roadmap:
 - [x] Create Repository
 - [x] Obtain Lab 10 Starter Files
 - [x] ~~Implement 3D rendering (Progress can be seen [here](https://www.youtube.com/watch?v=6jVMg5p2KdE))~~
+- [x] Select game idea
 - [ ] Implement 2D rendering
-- [ ] Select game idea
 - [ ] Create sprites
 - [ ] Implement input (buttons and slide pot) logic
 - [ ] Implement game logic
