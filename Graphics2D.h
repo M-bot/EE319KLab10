@@ -1,3 +1,11 @@
 void Graphics2DInit(void);
 void Render(void);
 void DrawImage(uint16_t x, uint16_t y, const uint16_t * image, uint16_t w, uint16_t h);
+void ClearBuffer(void);
+void DrawImageScreen(uint16_t x, uint16_t y, const uint16_t * image, uint16_t w, uint16_t h, uint8_t rot);
+void DrawWall(uint8_t rot, uint8_t door);
+void DrawHearts(uint8_t life, uint8_t max);
+void DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor);
+void DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+void DrawMap(void);
+void DrawBorderRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color1,uint16_t color2);

@@ -10,7 +10,9 @@
 
 
 int main(void) {
-	TExaS_Init();
+  TExaS_Init();
   Graphics2DInit();
-	while(1);
+  while(1) {
+		Render();
+	}
 }
