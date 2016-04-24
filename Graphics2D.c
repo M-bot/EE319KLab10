@@ -146,12 +146,12 @@ void Graphics2DInit(void) {
   ClearBuffer();
   // Draw the HUD
   ST7735_FillRect(0,0,WIDTH,HUD_HEIGHT,DARK_GRAY);
-	
-	DrawMap();
-	
+  
+  DrawMap();
+  
   DrawBorderRect(ITEM_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
   DrawBorderRect(ARROW_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
-	
+  
   DrawHearts(7,24);
   // Draw the four corners of the wall
   DrawImageScreen(0,HUD_HEIGHT+WALL,corner_i,WALL,WALL,0);
@@ -175,37 +175,37 @@ void DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor){
 }
 
 void DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
-	ST7735_DrawFastVLine(x,y,h,color);
-	ST7735_DrawFastVLine(x+w-1,y,h,color);
-	ST7735_DrawFastHLine(x+1,y,w-2,color);
-	ST7735_DrawFastHLine(x+1,y+h-1,w-2,color);
+  ST7735_DrawFastVLine(x,y,h,color);
+  ST7735_DrawFastVLine(x+w-1,y,h,color);
+  ST7735_DrawFastHLine(x+1,y,w-2,color);
+  ST7735_DrawFastHLine(x+1,y+h-1,w-2,color);
 }
 
 void DrawBorderRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color1,uint16_t color2) {
-	ST7735_FillRect(x,y,w,h,color1);
-	DrawRect(x,y,w,h,color2);
+  ST7735_FillRect(x,y,w,h,color1);
+  DrawRect(x,y,w,h,color2);
 }
 
 // Fake map atm
 void DrawMap(void) {
-	// Center room is light gray
+  // Center room is light gray
   DrawBorderRect(MAP_CENTER_X-MAP_SIZE,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,LIGHT_GRAY,0);
-	// Discovered rooms are gray
+  // Discovered rooms are gray
   DrawBorderRect(MAP_CENTER_X-MAP_SIZE*3,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
   DrawBorderRect(MAP_CENTER_X-MAP_SIZE,MAP_CENTER_Y+MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
   DrawBorderRect(MAP_CENTER_X+MAP_SIZE,MAP_CENTER_Y-MAP_SIZE*3/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
-	// Current room is white
+  // Current room is white
   DrawBorderRect(MAP_CENTER_X+MAP_SIZE,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,WHITE,0);
 }
 
 // Saves 56 bytes of ROM by combining a full heart and empty heart
 // Costs 198 bytes of transfer to LCD
 void DrawHalfHeart(uint16_t x, uint16_t y) {
-	for(int r = 0; r < 7; r++) {
-		for(int c = 0; c < 8; c++) {
-			ST7735_DrawPixel(x+c,y-r,c > 3 ? heartempty_i[c+r*8] : heartfull_i[c+r*8]);
-		}
-	}
+  for(int r = 0; r < 7; r++) {
+    for(int c = 0; c < 8; c++) {
+      ST7735_DrawPixel(x+c,y-r,c > 3 ? heartempty_i[c+r*8] : heartfull_i[c+r*8]);
+    }
+  }
 }
 
 void DrawHearts(uint8_t life, uint8_t max) {
@@ -213,7 +213,7 @@ void DrawHearts(uint8_t life, uint8_t max) {
     for(int h = 0; h < 12 && h < max-l*12; h++) {
       if(h % 2 == 0) {
         DrawImageScreen(HEART_X+h/2*9,HEART_Y+7+8*l,h>life-l*12 ? heartempty_i : heartfull_i,8,7,0);
-			}
+      }
       if(life % 2 == 1 && h == life-1-l*12) {
         DrawHalfHeart(HEART_X+h/2*9,HEART_Y+7+8*l);
       }
@@ -337,3 +337,5 @@ void DrawImageScreen(uint16_t x, uint16_t y, const uint16_t * image, uint16_t w,
     }
   }
 }  
+
+  // This is to test a filter that replaces tabs with 2 spaces
