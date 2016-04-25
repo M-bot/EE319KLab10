@@ -133,7 +133,20 @@ const unsigned short heartempty_i[] = {
 #define LIGHT_GRAY 0x738E
 #define WHITE 0xFFFF
 
+#define MAX_SPRITES 30
+
+#define UPDATE_DOOR 0x1
+#define UPDATE_HEART 0x2
+
 uint16_t pixels[ROOM_WIDTH*ROOM_HEIGHT];
+// Change to vector later
+Sprite sprites[MAX_SPRITES];
+uint8_t ssize = 0;
+uint8_t sunique = 0;
+uint8_t updatestatus = 0;
+uint8_t door = 0;
+uint8_t max_hearts = 0;
+uint8_t cur_hearts = 0;
 
 void Graphics2DInit(void) {
   // Inititalize the display
@@ -152,7 +165,7 @@ void Graphics2DInit(void) {
   DrawBorderRect(ITEM_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
   DrawBorderRect(ARROW_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
   
-  DrawHearts(7,24);
+  DrawHearts(6,12);
   // Draw the four corners of the wall
   DrawImageScreen(0,HUD_HEIGHT+WALL,corner_i,WALL,WALL,0);
   DrawImageScreen(WIDTH-WALL,HUD_HEIGHT+WALL,corner_i,WALL,WALL,1);
@@ -164,6 +177,82 @@ void Graphics2DInit(void) {
   }
   // Draw the room
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
+}
+
+uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, uint8_t initialx, uint8_t initialy) {
+	if(ssize == MAX_SPRITES)
+		return -1;
+	int x;
+	for(x = 0; x < MAX_SPRITES; x++) {
+		if(sprites[x].width == 0) {
+			break;
+		}
+	}
+	sprites[x].image = image;
+	sprites[x].width = width;
+	sprites[x].height = height;
+	sprites[x].x = initialx;
+	sprites[x].y = initialy;
+	sprites[x].unique = sunique++;
+	return ssize++;
+}
+
+void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny) {
+	for(int x = 0; x < MAX_SPRITES; x++) {
+		if(sprites[x].unique == unique) {
+			sprites[x].x = screenx;
+			sprites[x].y = screeny;
+			return;
+		}
+	}
+}
+
+void RemoveSprite(uint8_t unique) {
+	for(int x = 0; x < MAX_SPRITES; x++) {
+		if(sprites[x].unique == unique) {			
+			sprites[x].image = 0;
+			sprites[x].width = 0;
+			sprites[x].height = 0;
+			sprites[x].x = 0;
+			sprites[x].y = 0;
+			sprites[x].unique = -1;
+			return;
+		}
+	}
+	ssize--;
+}
+
+void UpdateDoor(uint8_t d) {
+	door = d;
+	updatestatus |= UPDATE_DOOR;
+}
+
+void UpdateHeart(uint8_t max, uint8_t current) {
+	max_hearts = max;
+	cur_hearts = current;
+	updatestatus |= UPDATE_HEART;
+}
+
+void CheckUpdates(void) {
+	if((updatestatus & UPDATE_DOOR) == UPDATE_DOOR) {
+		for(int x = 0; x < 4; x++) {
+			// Add current wall/door status to avoid rendering all walls on update
+			DrawWall(x,door & 0x3);
+			door >>= 2;
+		}
+		updatestatus &= ~UPDATE_DOOR;
+	}
+	if((updatestatus & UPDATE_HEART) == UPDATE_HEART) {
+		DrawHearts(cur_hearts,max_hearts);
+		updatestatus &= ~UPDATE_HEART;
+	}
+}
+
+void DrawSprites(void) {
+	for(int x = 0; x < MAX_SPRITES; x++) {
+		if(sprites[x].width == 0) continue;
+		DrawImage(sprites[x].x,sprites[x].y,sprites[x].image,sprites[x].width,sprites[x].height);
+	}
 }
 
 void DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor){
@@ -212,7 +301,7 @@ void DrawHearts(uint8_t life, uint8_t max) {
   for(int l = 0; l <= 2; l++) {
     for(int h = 0; h < 12 && h < max-l*12; h++) {
       if(h % 2 == 0) {
-        DrawImageScreen(HEART_X+h/2*9,HEART_Y+7+8*l,h>life-l*12 ? heartempty_i : heartfull_i,8,7,0);
+        DrawImageScreen(HEART_X+h/2*9,HEART_Y+7+8*l,h>=life-l*12 ? heartempty_i : heartfull_i,8,7,0);
       }
       if(life % 2 == 1 && h == life-1-l*12) {
         DrawHalfHeart(HEART_X+h/2*9,HEART_Y+7+8*l);
@@ -223,6 +312,7 @@ void DrawHearts(uint8_t life, uint8_t max) {
 
 
 void DrawWall(uint8_t rot, uint8_t door) {
+
   if(rot == 0) {
     for(int x = WALL; x < WIDTH-WALL; x+=WALL) {
       DrawImageScreen(x,HUD_HEIGHT+WALL,wall_i,WALL,WALL,0);
@@ -247,24 +337,22 @@ void DrawWall(uint8_t rot, uint8_t door) {
     }
   }
   
-  
-  if(door == 1) {
-    // Change to a switch statement later
-    if(rot == 0) {
-      DrawImageScreen(WIDTH/2-WALL,HEIGHT-ROOM_HEIGHT,door_i,20,20,0);
-    }
-    
-    if(rot == 1) {
-      DrawImageScreen(WIDTH-20,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,1);
-    }
-    
-    if(rot == 2) {
-      DrawImageScreen(WIDTH/2-WALL,HEIGHT,door_i,20,20,2);
-    }
-    
-    if(rot == 3) {
-      DrawImageScreen(0,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,3);
-    }
+  // Need to seperate these
+  if(door >= 1) {
+		switch(rot) {
+			case 1:
+				DrawImageScreen(WIDTH-20,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,1);
+				break;
+			case 2:
+				DrawImageScreen(WIDTH/2-WALL,HEIGHT,door_i,20,20,2);
+				break;
+			case 3:
+				DrawImageScreen(0,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,3);
+				break;
+			default:
+				DrawImageScreen(WIDTH/2-WALL,HEIGHT-ROOM_HEIGHT,door_i,20,20,0);
+				break;
+		}
   }
 }
 
@@ -275,28 +363,27 @@ void ClearBuffer(void) {
   }
 }
 
-uint16_t cur;
 void Render(void) {
   ClearBuffer();
-  DrawImage(cur,cur,issac,18,21);
+	DrawSprites();
+	CheckUpdates();
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
-  cur = (cur + 1) % (ROOM_HEIGHT-21);
 }
 
-void DrawImage(uint16_t x, uint16_t y, const uint16_t * image, uint16_t w, uint16_t h) {
+void DrawImage(uint16_t x, uint16_t y, const unsigned short * image, uint16_t w, uint16_t h) {
   // Perform clipping on the image so it fits in the room
   int16_t hh = h,ww = w;
   if((y+h) >= ROOM_HEIGHT)
     hh = ROOM_HEIGHT - y;
   if((x+w) >= ROOM_WIDTH)
     ww = ROOM_WIDTH - x;
-  
+  y = ROOM_HEIGHT - y;
   // Draw image to buffer
   for(int r = 0; r < hh; r++) {
     for(int c = 0; c < ww; c++) {
       // Use 0xFFFF as transparency color
-      if(image[r*w+c] == 0xFFFF) continue; 
-      pixels[(y+r)*ROOM_WIDTH+x+c] = image[r*w+c];
+      if(image[(hh-r-1)*w+c] == 0xFFFF) continue; 
+      pixels[(y-r)*ROOM_WIDTH+x+c] = image[(hh-r-1)*w+c];
     }
   }  
 }
