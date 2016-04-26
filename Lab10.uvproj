@@ -440,6 +440,26 @@
               <FileType>2</FileType>
               <FilePath>.\startup.s</FilePath>
             </File>
+            <File>
+              <FileName>Character.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Character.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ADC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Graphics2D.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Graphics2D.c</FilePath>
+            </File>
+            <File>
+              <FileName>SysTickInts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SysTickInts.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -449,6 +469,11 @@
               <FileName>texas.o</FileName>
               <FileType>3</FileType>
               <FilePath>.\texas.o</FilePath>
+            </File>
+            <File>
+              <FileName>Character.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Character.h</FilePath>
             </File>
           </Files>
         </Group>
