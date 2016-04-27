@@ -460,6 +460,11 @@
               <FileType>1</FileType>
               <FilePath>.\SysTickInts.c</FilePath>
             </File>
+            <File>
+              <FileName>5Pos_Switch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\5Pos_Switch.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -474,6 +479,21 @@
               <FileName>Character.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Character.h</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ADC.h</FilePath>
+            </File>
+            <File>
+              <FileName>ST7735.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ST7735.h</FilePath>
+            </File>
+            <File>
+              <FileName>Graphics2D.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Graphics2D.h</FilePath>
             </File>
           </Files>
         </Group>

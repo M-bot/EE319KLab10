@@ -8,6 +8,7 @@
 #include <math.h>
 #include "SysTickInts.h"
 #include "ADC.h"
+#include "5Pos_Switch.h"
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
@@ -24,32 +25,44 @@
 		Render();
 	}
 }*/
-int8_t Convert(uint32_t input){ //returns 1,0,or -1 depending on region of slide pot meter
+/*int8_t Convert(uint32_t input){ //returns 1,0,or -1 depending on region of slide pot meter
   if(input>=(uint32_t)((0x0FFF)*(2/3)))
 		return 1;
 	else if (input<=((0x0FFF)*(1/3)))
 		return -1;
 	else
 		return 0;
-}
-int isADCReady = 0;
+}*/
+int isSensorReady = 0;
 int ADCData = 0;
 int main(void){
   TExaS_Init();         // Bus clock is 80 MHz 
 	Graphics2DInit();
   ST7735_InitR(INITR_REDTAB); 
-	SysTick_Init(80000000/40);
+	SysTick_Init(80000000/20);
   ADC_Init();         // turn on ADC, set channel to 1
+	Switch_Init(); //prepare Port B and D for switches
   while(1){
 		//while(!isADCReady);
-		//isADCReady = 0;
-		ADCData= ADC_In();
-		int8_t Dir = Convert(ADCData);
-		if(Dir!=0)
-		{
+		//uint32_t i =0x008FFFFF; 
+		while(!isSensorReady)
+		isSensorReady=0;
+		int8_t mov[2];
+		int8_t fire[2];
+		Mov_In(mov);
+		Fire_In(fire);
+		
+
 			//PLACEHOLDERFUNCTION(Chacreter.sprite,CharacterMov(Dir)) //send x and y seperately
 			 
-		}
+		
 		
   }
+}
+void SysTick_Handler(void){
+  //PF2 ^= 0x04;      // Heartbeat
+  //PF2 ^= 0x04;      // Heartbeat
+	//ADCData = ADC_In();
+	isSensorReady = 1;
+  //PF2 ^= 0x04;      // Heartbeat
 }
