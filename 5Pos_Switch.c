@@ -25,7 +25,7 @@ void Mov_In(int8_t arr[2])
 {
 	int Data = ~GPIO_PORTB_DATA_R;
   arr[0] =    ((Data&(0x08))>>3) + ((Data&(0x01))*-1);
-	arr[1] =    ((Data&(0x02))>>1) + (((Data&(0x04))>>2)*-1);
+	arr[1] =    (((Data&(0x02))>>1)*(-1)) + (((Data&(0x04))>>2));
 }
 
 //checks firing swtich for position and returns corresponding x and y coordinate
@@ -34,6 +34,6 @@ void Fire_In(uint8_t arr[2])
 {
 	int Data = ~GPIO_PORTB_DATA_R;
   arr[0] =    ((Data&(0x08))>>3) + ((Data&(0x01))*-1);
-	arr[1] =    ((Data&(0x02))>>1) + (((Data&(0x04))>>2)*-1);
+	arr[1] =    (((Data&(0x02))>>1)*(-1)) + (((Data&(0x04))>>2)*-1);
 }
 	

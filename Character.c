@@ -10,7 +10,7 @@
 #define LEFT -1;
 #define STAY 0;
 #define RIGHT 1;
-
+//18x21
 const unsigned short Character_Sprite[] = {
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF,
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x2946, 0x8416, 0x0000, 0x0000, 0x0000, 0x9CF8, 0x2946, 0x0000,
@@ -42,18 +42,49 @@ const unsigned short Character_Sprite[] = {
 uint32_t Damage; 
 uint32_t Fire_Rate;  //# Times per Second
 uint32_t Speed;      //Pixels per second if held down
-uint32_t Max_Health; //Multiples of two to correspond to half hearts
-uint32_t Current_Health;  //""
+uint8_t Max_Health; //Multiples of two to correspond to half hearts
+uint8_t Current_Health;  //""
 uint32_t Shot_Speed;      // Tears pixels per second from when they are created
+uint8_t Current_x;
+uint8_t Current_y;
+uint8_t Width;
+uint8_t Height;
+uint8_t ID;
 
 void Character_Init(void)
 {
 		Damage = 50;
 		Fire_Rate = 2;
-		Speed = 8;
+		Speed = 1;
 		Max_Health = 6;
 		Current_Health =6;
 	  Shot_Speed = 25;
-		
+		Width =18;
+		Height =21;
+	  Current_x = 61;
+		Current_y = 30;
+		ID = AddSprite(Character_Sprite,Width,Height,Current_x,Current_y);
+	
+}
+
+uint8_t Check_Collision(uint8_t test_x, uint8_t test_y, uint8_t test_width, uint8_t test_height)
+{
+	for(int i=0;i<Width;i++)
+		for(int x =0;x<test_width;x++)
+			if((i+Width)==(x+test_width))
+				return 1;
+	for(int j=0;j<Height;j++)
+		for(int y =0;y<test_height;y++)
+			if((y+Height)==(y+test_height))
+				return 1;
+	return 0;
 }
 	
+void Move(int8_t x,int8_t y)
+{
+	if( (Current_x+Width + x*(Speed))<=140 && (int8_t)(Current_x + x*(Speed))>=0)
+		Current_x += x*(Speed);
+	if( (Current_y+Height + y*(Speed))<=80 && (int8_t)(Current_y + y*(Speed))>=0)
+		Current_y += y*(Speed);
+	UpdateSprite(ID,Current_x,Current_y);
+}

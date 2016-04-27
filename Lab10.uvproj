@@ -465,6 +465,11 @@
               <FileType>1</FileType>
               <FilePath>.\5Pos_Switch.c</FilePath>
             </File>
+            <File>
+              <FileName>Timer0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Timer0.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

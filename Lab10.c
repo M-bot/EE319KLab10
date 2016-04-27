@@ -38,11 +38,13 @@ int ADCData = 0;
 int main(void){
   TExaS_Init();         // Bus clock is 80 MHz 
 	Graphics2DInit();
-  ST7735_InitR(INITR_REDTAB); 
+  //ST7735_InitR(INITR_REDTAB); 
 	SysTick_Init(80000000/20);
   ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
+	Character_Init();
   while(1){
+		Render();
 		//while(!isADCReady);
 		//uint32_t i =0x008FFFFF; 
 		while(!isSensorReady)
@@ -51,6 +53,7 @@ int main(void){
 		int8_t fire[2];
 		Mov_In(mov);
 		Fire_In(fire);
+		Move(mov[0],mov[1]);
 		
 
 			//PLACEHOLDERFUNCTION(Chacreter.sprite,CharacterMov(Dir)) //send x and y seperately
