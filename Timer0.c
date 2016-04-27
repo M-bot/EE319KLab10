@@ -22,9 +22,9 @@
  http://users.ece.utexas.edu/~valvano/
  */
 #include <stdint.h>
-
+#include "Character.h"
 #include "tm4c123gh6pm.h"
-
+#include "5Pos_Switch.h" 
 void (*PeriodicTask0)(void);   // user function
 
 // ***************** Timer0_Init ****************
@@ -51,5 +51,8 @@ void Timer0_Init(void(*task)(void), uint32_t period){
 
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER0A timeout
-  (*PeriodicTask0)();                // execute user task
+  (*PeriodicTask0)(); 
+	// execute user task
+
+	
 }

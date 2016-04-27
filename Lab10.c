@@ -9,14 +9,17 @@
 #include "SysTickInts.h"
 #include "ADC.h"
 #include "5Pos_Switch.h"
+#include "Timer0.h"
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
 #define PF2       (*((volatile uint32_t *)0x40025010))
 #define PF3       (*((volatile uint32_t *)0x40025020))
 
-
-
+int8_t mov[2];
+int8_t fire[2];
+int8_t mov_ready;
+void Timer0A_Run(void);
 /*int main(void) {
   TExaS_Init();
   Graphics2DInit();
@@ -43,17 +46,18 @@ int main(void){
   ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
+	Timer0_Init(Timer0A_Run,8000000); 
   while(1){
 		Render();
 		//while(!isADCReady);
 		//uint32_t i =0x008FFFFF; 
 		while(!isSensorReady)
 		isSensorReady=0;
-		int8_t mov[2];
-		int8_t fire[2];
-		Mov_In(mov);
-		Fire_In(fire);
+		if(mov_ready ==1)
+		{
 		Move(mov[0],mov[1]);
+		mov_ready=0;
+		}
 		
 
 			//PLACEHOLDERFUNCTION(Chacreter.sprite,CharacterMov(Dir)) //send x and y seperately
@@ -61,6 +65,11 @@ int main(void){
 		
 		
   }
+}
+void Timer0A_Run(void){
+	Mov_In(mov);
+	mov_ready=1;
+	
 }
 void SysTick_Handler(void){
   //PF2 ^= 0x04;      // Heartbeat
