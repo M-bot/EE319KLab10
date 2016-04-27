@@ -11,3 +11,6 @@ uint8_t Check_Collision(uint32_t test_x, uint32_t test_y, uint32_t test_width, u
 
 //Update Issac Location
 void Move(int8_t x,int8_t y);
+
+
+void Place(int8_t x,int8_t y);

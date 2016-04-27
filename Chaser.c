@@ -11,7 +11,8 @@
 #define STAY 0;
 #define RIGHT 1;
 //18x21
-const unsigned short Character_Sprite[] = {
+
+const unsigned short Chaser_Sprite[] = {
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF,
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x2946, 0x8416, 0x0000, 0x0000, 0x0000, 0x9CF8, 0x2946, 0x0000,
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x420A, 0xB59D, 0x31A8, 0x2947, 0x422B, 0xC63F,
@@ -38,6 +39,8 @@ const unsigned short Character_Sprite[] = {
  0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
 
 };
+struct Chaser_Type
+{ 
 
 uint32_t Damage; 
 uint32_t Fire_Rate;  //# Times per Second
@@ -50,78 +53,79 @@ uint8_t Current_y;
 uint8_t Width;
 uint8_t Height;
 uint8_t ID;
+};
+typedef struct Chaser_Type Chaser_t;
 
-void Character_Init(void)
+Chaser_t arr[8];
+
+
+uint8_t Chaser_Init(void)
 {
-		Damage = 50;
-		Fire_Rate = 2;
-		Speed = 2;
-		Max_Health = 6;
-		Current_Health =6;
-	  Shot_Speed = 25;
-		Width =18;
-		Height =21;
-	  Current_x = 61;
-		Current_y = 30;
-		ID = AddSprite(Character_Sprite,Width,Height,Current_x,Current_y);
-		UpdateHeart(Max_Health/2,Current_Health);
+	uint8_t i=0;
+	while(arr[i].ID!=0)
+		i++;
+		arr[i].Damage = 50;
+		arr[i].Fire_Rate = 2;
+		arr[i].Speed = 2;
+		arr[i].Max_Health = 6;
+		arr[i].Current_Health =6;
+	  arr[i].Shot_Speed = 25;
+		arr[i].Width =18;
+		arr[i].Height =21;
+	  arr[i].Current_x = 21;
+		arr[i].Current_y = 10;
+		arr[i].ID = AddSprite(Chaser_Sprite,arr[i].Width,arr[i].Height,arr[i].Current_x,arr[i].Current_y);
+		UpdateHeart(arr[i].Max_Health/2,arr[i].Current_Health);
+	return(arr[i].ID);
 	
 }
 
-uint8_t Check_Collision(uint8_t test_x, uint8_t test_y, uint8_t test_width, uint8_t test_height)
+/*uint8_t Check_Collision(uint8_t test_x, uint8_t test_y, uint8_t test_width, uint8_t test_height)
 {
-	uint8_t t1=0;
-	uint8_t t2=0;
-	for(int i=0;i<Width;i++)
+	for(int i=0;i<arr[i].Width;i++)
 		for(int x =0;x<test_width;x++)
-			if((i+Current_x)==(x+test_x))
-			{
-				t1=1;
-				i=Width;
-				x=test_width;
-			}
-	for(int j=0;j<Height;j++)
+			if((i+arr[i].Width)==(x+test_width))
+				return 1;
+	for(int j=0;j<arr[i].Height;j++)
 		for(int y =0;y<test_height;y++)
-			if((j+Current_y)==(y+test_y))
-			{
-				t2=1;
-				j=Height;
-				y=test_height;
-				
-			}
-	return (t1 && t2);
-}
+			if((y+arr[i].Height)==(y+test_height))
+				return 1;
+	return 0;
+}*/
 	
-void Move(int8_t x,int8_t y)
+/*void Move(int8_t x,int8_t y)
 {
 	if( (Current_x+Width + x*(Speed))<=140 && (int8_t)(Current_x + x*(Speed))>=0)
 	{
-		/*if(x!=0 && y!=0)
+		if(x!=0 && y!=0)
 		{
 			Current_x= Current_x*10 +(int8_t)((x*Speed*10)/(int8_t)sqrt(2));
 			Current_x = Current_x/10 + (Current_x%10)/5;
 		}
 		else*/
-		Current_x += x*(Speed);
-	}
+	//	Current_x += x*(Speed);
+/*
 	if( (Current_y+Height + y*(Speed))<=80 && (int8_t)(Current_y + y*(Speed))>=0)
 	{
-		/*if(x!=0 && y!=0)
+		if(x!=0 && y!=0)
 		{
 			Current_y= Current_y*10 +(int8_t)((y*Speed*10)/(int8_t)sqrt(2));
 			Current_y= Current_y/10 + (Current_y%10)/5;
 		}
 		else*/
-		Current_y += y*(Speed);
-	}
+	//	Current_y += y*(Speed);
+	//}
 	//if(x!=0 && y!=0)
-	UpdateSprite(ID,Current_x,Current_y);
-}
-void Place(int8_t x,int8_t y)
+	//UpdateSprite(ID,Current_x,Current_y);
+///}
+void Chaser_Get_Loc(int8_t ID,int8_t array[4])
 {
-	UpdateSprite(ID,x,y);
-	Current_x=x;
-	Current_y=y;
-}
-
+uint8_t i =0;
+	while(arr[i].ID!=ID)
+		i++;
+	array[0]=arr[i].Current_x;
+	array[1]=arr[i].Current_y;
+	array[2]=arr[i].Width;
+	array[3]=arr[i].Height;
+}	
 

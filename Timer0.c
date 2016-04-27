@@ -48,7 +48,10 @@ void Timer0_Init(void(*task)(void), uint32_t period){
   NVIC_EN0_R = 1<<19;           // 9) enable IRQ 19 in NVIC
   TIMER0_CTL_R = 0x00000001;    // 10) enable TIMER0A
 }
-
+void Update_Period(uint32_t Period)
+{
+	TIMER0_TAILR_R = Period-1;    // 4) reload value
+}
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER0A timeout
   (*PeriodicTask0)(); 

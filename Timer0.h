@@ -30,5 +30,6 @@
 //          period in units (1/clockfreq)
 // Outputs: none
 void Timer0_Init(void(*task)(void), uint32_t period);
+void Update_Period(uint32_t Period);
 
 #endif // __TIMER2INTS_H__

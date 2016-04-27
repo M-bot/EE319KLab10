@@ -10,6 +10,7 @@
 #include "ADC.h"
 #include "5Pos_Switch.h"
 #include "Timer0.h"
+#include "Chaser.h"
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
@@ -36,6 +37,8 @@ void Timer0A_Run(void);
 	else
 		return 0;
 }*/
+uint8_t Chasers[8];
+uint8_t *ChasersPt =Chasers;
 int isSensorReady = 0;
 int ADCData = 0;
 int main(void){
@@ -46,18 +49,30 @@ int main(void){
   ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
-	Timer0_Init(Timer0A_Run,8000000); 
+	Timer0_Init(Timer0A_Run,4000000); 
+	*ChasersPt=Chaser_Init();
+	ChasersPt++;
   while(1){
 		Render();
 		//while(!isADCReady);
 		//uint32_t i =0x008FFFFF; 
-		while(!isSensorReady)
-		isSensorReady=0;
+		//while(!isSensorReady)
+		//isSensorReady=0;
 		if(mov_ready ==1)
 		{
 		Move(mov[0],mov[1]);
 		mov_ready=0;
 		}
+		int8_t coords[4];
+		uint8_t damage;
+		for(int i=0;i<8;i++)
+			if(Chasers[i]!=0)
+			{
+ 				Chaser_Get_Loc(Chasers[i],coords);
+				damage=Check_Collision(coords[0],coords[1],coords[2],coords[3]);
+				if(damage)
+					Place(90,50);
+			}
 		
 
 			//PLACEHOLDERFUNCTION(Chacreter.sprite,CharacterMov(Dir)) //send x and y seperately

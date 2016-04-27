@@ -470,6 +470,11 @@
               <FileType>1</FileType>
               <FilePath>.\Timer0.c</FilePath>
             </File>
+            <File>
+              <FileName>Chaser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Chaser.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -499,6 +504,11 @@
               <FileName>Graphics2D.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Graphics2D.h</FilePath>
+            </File>
+            <File>
+              <FileName>Timer0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Timer0.h</FilePath>
             </File>
           </Files>
         </Group>

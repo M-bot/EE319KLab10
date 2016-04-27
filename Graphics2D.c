@@ -165,7 +165,7 @@ void Graphics2DInit(void) {
   DrawBorderRect(ITEM_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
   DrawBorderRect(ARROW_X,ITEM_Y,ITEM_SIZE,ITEM_SIZE,GRAY,0);
   
-  DrawHearts(6,12);
+  //DrawHearts(6,12);
   // Draw the four corners of the wall
   DrawImageScreen(0,HUD_HEIGHT+WALL,corner_i,WALL,WALL,0);
   DrawImageScreen(WIDTH-WALL,HUD_HEIGHT+WALL,corner_i,WALL,WALL,1);
