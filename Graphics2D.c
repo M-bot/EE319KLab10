@@ -3,33 +3,6 @@
 #include "ST7735.h"
 #include "Timer0.h"
 
-const unsigned short issac[] = {
- 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF,
- 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x2946, 0x8416, 0x0000, 0x0000, 0x0000, 0x9CF8, 0x2946, 0x0000,
- 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x420A, 0xB59D, 0x31A8, 0x2947, 0x422B, 0xC63F,
- 0x420A, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x39A9, 0xC5FF, 0xC61F, 0xC5FF,
- 0xC61F, 0xC61F, 0x39A9, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x420A, 0xCE5F,
- 0xC63F, 0xC63F, 0xC63F, 0xCE5F, 0x420A, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0x0000,
- 0x10A3, 0x7BD4, 0x7394, 0x7393, 0x7393, 0x7BB3, 0x0000, 0x0000, 0x0862, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000,
- 0xAD7C, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xAD7C, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
- 0xFFFF, 0x0000, 0x41EA, 0x8435, 0x9478, 0x94B8, 0x9CF9, 0xA4F9, 0xA4F9, 0x9CD9, 0x9499, 0x7394, 0x3188, 0x0000, 0xFFFF, 0xFFFF,
- 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x5AAA, 0xB5BE, 0x9CF9, 0x8415, 0x8C37, 0x8C37, 0x8C37, 0x8C55, 0xAD5D, 0xAD5B, 0x4A67, 0x0000,
- 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0x4206, 0xDEB8, 0xC61F, 0x422C, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6B52, 0xCE5F,
- 0xEF17, 0x0861, 0x0000, 0xFFFF, 0xFFFF, 0x0000, 0x4A6C, 0x9491, 0xE716, 0xE73A, 0x5AC8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
- 0x840E, 0xEF59, 0xF736, 0xB596, 0x4A6D, 0x0000, 0xFFFF, 0x0020, 0xBDBE, 0xAD76, 0xAD2F, 0xA510, 0x630B, 0x2967, 0x2126, 0x2126,
- 0x2126, 0x2967, 0x738C, 0xAD30, 0xAD2F, 0xB5B9, 0xAD3B, 0x0000, 0xFFFF, 0x0020, 0xBDBE, 0x528D, 0x0000, 0x0000, 0x6B31, 0xC63F,
- 0xBDFF, 0xC61F, 0xC5FF, 0xBDBF, 0x4A6C, 0x0000, 0x0000, 0x7392, 0xAD5C, 0x0000, 0xFFFF, 0x0020, 0xB5BE, 0xB5B9, 0x9492, 0x0000,
- 0x6B51, 0xC61F, 0xBDDE, 0xBDDE, 0xBDDE, 0xBDDF, 0xBDDA, 0x94B2, 0x0020, 0x6B72, 0xAD7C, 0x0000, 0xFFFF, 0x0000, 0xB59E, 0xDEDF,
- 0xCE7B, 0x3187, 0x7BD4, 0xBDBF, 0xBDBE, 0xBDDE, 0xBDDE, 0xBDDE, 0xDEFF, 0xD6BB, 0x39C8, 0x8415, 0xAD7B, 0x0000, 0xFFFF, 0x0000,
- 0xAD5C, 0xC61E, 0xC63F, 0xAD5D, 0xBDFE, 0xBDBE, 0xB5BD, 0xBDBE, 0xBDDE, 0xBDDE, 0xBDFE, 0xBDDF, 0xAD5C, 0xB5BE, 0x8415, 0x0000,
- 0xFFFF, 0x0000, 0x0000, 0x8C56, 0xC5FF, 0xBDDE, 0xBDDE, 0xBDBE, 0xBDBE, 0xBDBE, 0xBDDE, 0xBDDE, 0xBDDE, 0xBDDE, 0xC5FE, 0x422B,
- 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0x94B9, 0xC5FF, 0xBDDE, 0xBDDE, 0xBDBE, 0xBDBE, 0xBDBE, 0xBDDE, 0xBDDE, 0xBDDE,
- 0x7BB3, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xB59D, 0xC5FF, 0xC63F, 0xC61F, 0xC63F, 0xC63F, 0xBDFF,
- 0xC5FF, 0x8414, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x1082, 0x1083, 0x1083, 0x1083, 0x1082,
- 0x1083, 0x1083, 0x1083, 0x10A3, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
- 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-
-};
 
 const unsigned short bg[] = {
  0x31EC, 0x4A8F, 0x428F, 0x428F, 0x29CC, 0x52F1, 0x29AC, 0x31ED, 0x3A2D, 0x320D, 0x214A, 0x52F1, 0x29CC, 0x4AB0, 0x298B, 0x216A,
@@ -133,7 +106,7 @@ const unsigned short heartempty_i[] = {
 #define LIGHT_GRAY 0x738E
 #define WHITE 0xFFFF
 
-#define MAX_SPRITES 30
+#define MAX_SPRITES 100
 
 #define UPDATE_DOOR 0x1
 #define UPDATE_HEART 0x2
@@ -148,6 +121,7 @@ uint8_t door = 0;
 uint8_t max_hearts = 0;
 uint8_t cur_hearts = 0;
 
+// Initializes display and draws initial images
 void Graphics2DInit(void) {
   // Inititalize the display
   ST7735_InitR(INITR_REDTAB);
@@ -179,6 +153,7 @@ void Graphics2DInit(void) {
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
 }
 
+// Loads the given sprite data into an available slot and returns its unique identifier
 uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, uint8_t initialx, uint8_t initialy) {
 	if(ssize == MAX_SPRITES)
 		return -1;
@@ -193,10 +168,22 @@ uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, u
 	sprites[x].height = height;
 	sprites[x].x = initialx;
 	sprites[x].y = initialy;
-	sprites[x].unique = sunique++;
-	return ssize++;
+	sprites[x].unique = GetNextUnique();
+	ssize++;
+	return sunique;
+}
+// Returns the next available unique to avoid conflicts
+uint8_t GetNextUnique(void) {
+	for(int x = 0; x < MAX_SPRITES; x++) {
+		if(sprites[x].unique != ++sunique) {
+			if(sunique == -1) continue;
+			return sunique;
+		}
+	}
+	return -1;
 }
 
+// Updates the positional data of a given sprite from a unique value
 void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny) {
 	for(int x = 0; x < MAX_SPRITES; x++) {
 		if(sprites[x].unique == unique) {
@@ -207,7 +194,8 @@ void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny) {
 	}
 }
 
-void RemoveSprite(uint8_t unique) {
+// Removes the from rendering the given sprite from a unique value
+uint8_t RemoveSprite(uint8_t unique) {
 	for(int x = 0; x < MAX_SPRITES; x++) {
 		if(sprites[x].unique == unique) {			
 			sprites[x].image = 0;
@@ -216,23 +204,30 @@ void RemoveSprite(uint8_t unique) {
 			sprites[x].x = 0;
 			sprites[x].y = 0;
 			sprites[x].unique = -1;
-			return;
+			ssize--;
+			return 0;
 		}
 	}
-	ssize--;
+	return 1;
 }
-
+// Updates doors, must be given a flag where every 2 bits are each doors data
+// the least significant of which are the top door and then in a clockwise fashion 
+// to the left door as the most significant
 void UpdateDoor(uint8_t d) {
 	door = d;
 	updatestatus |= UPDATE_DOOR;
 }
 
+// Updates hearts, both max and current our in half-heart units
+// The max number of half hearts displayable is 24
 void UpdateHeart(uint8_t max, uint8_t current) {
 	max_hearts = max;
 	cur_hearts = current;
 	updatestatus |= UPDATE_HEART;
 }
 
+// Checks the status flag to see if there is any rendering data that
+// needs to be pushed to the screen
 void CheckUpdates(void) {
 	if((updatestatus & UPDATE_DOOR) == UPDATE_DOOR) {
 		for(int x = 0; x < 4; x++) {
@@ -248,6 +243,7 @@ void CheckUpdates(void) {
 	}
 }
 
+// Draws all the sprites in linear fashion, does not support z levels
 void DrawSprites(void) {
 	for(int x = 0; x < MAX_SPRITES; x++) {
 		if(sprites[x].width == 0) continue;
@@ -255,6 +251,8 @@ void DrawSprites(void) {
 	}
 }
 
+// Draws a string in the given color, this method is different than the ST7735
+// equivalent because it does not verify the text is on screen
 void DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor){
   while(*pt){
     ST7735_DrawCharS(x, y, *pt, textColor, textColor, 1);
@@ -263,6 +261,7 @@ void DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor){
   }
 }
 
+// Draws a non-filled rectangle
 void DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
   ST7735_DrawFastVLine(x,y,h,color);
   ST7735_DrawFastVLine(x+w-1,y,h,color);
@@ -270,6 +269,7 @@ void DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
   ST7735_DrawFastHLine(x+1,y+h-1,w-2,color);
 }
 
+// Draws a filled rectangle with a 1 pixel border
 void DrawBorderRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color1,uint16_t color2) {
   ST7735_FillRect(x,y,w,h,color1);
   DrawRect(x,y,w,h,color2);
@@ -287,6 +287,7 @@ void DrawMap(void) {
   DrawBorderRect(MAP_CENTER_X+MAP_SIZE,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,WHITE,0);
 }
 
+// Draws half a heart
 // Saves 56 bytes of ROM by combining a full heart and empty heart
 // Costs 198 bytes of transfer to LCD
 void DrawHalfHeart(uint16_t x, uint16_t y) {
@@ -297,7 +298,9 @@ void DrawHalfHeart(uint16_t x, uint16_t y) {
   }
 }
 
+// Draws the life meter
 void DrawHearts(uint8_t life, uint8_t max) {
+	ST7735_FillRect(HEART_X,HEART_Y,54,16,DARK_GRAY);
   for(int l = 0; l <= 2; l++) {
     for(int h = 0; h < 12 && h < max-l*12; h++) {
       if(h % 2 == 0) {
@@ -311,6 +314,7 @@ void DrawHearts(uint8_t life, uint8_t max) {
 }
 
 
+// Draws any of the four walls, with or without a door
 void DrawWall(uint8_t rot, uint8_t door) {
 
   if(rot == 0) {
@@ -341,21 +345,22 @@ void DrawWall(uint8_t rot, uint8_t door) {
   if(door >= 1) {
 		switch(rot) {
 			case 1:
-				DrawImageScreen(WIDTH-20,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,1);
+				DrawImageScreen(WIDTH-20,HEIGHT-ROOM_HEIGHT/2,door == 1 ? door_i : door_i,20,20,1);
 				break;
 			case 2:
-				DrawImageScreen(WIDTH/2-WALL,HEIGHT,door_i,20,20,2);
+				DrawImageScreen(WIDTH/2-WALL,HEIGHT,door == 1 ? door_i : door_i,20,20,2);
 				break;
 			case 3:
-				DrawImageScreen(0,HEIGHT-ROOM_HEIGHT/2,door_i,20,20,3);
+				DrawImageScreen(0,HEIGHT-ROOM_HEIGHT/2,door == 1 ? door_i : door_i,20,20,3);
 				break;
 			default:
-				DrawImageScreen(WIDTH/2-WALL,HEIGHT-ROOM_HEIGHT,door_i,20,20,0);
+				DrawImageScreen(WIDTH/2-WALL,HEIGHT-ROOM_HEIGHT,door == 1 ? door_i : door_i,20,20,0);
 				break;
 		}
   }
 }
 
+// Draws the background
 void ClearBuffer(void) {
   // Clears to black, should clear to current background
   for(int p = 0; p < ROOM_WIDTH*ROOM_HEIGHT; p++) {
@@ -363,6 +368,7 @@ void ClearBuffer(void) {
   }
 }
 
+// Draws everything that needs to be drawn
 void Render(void) {
   ClearBuffer();
 	DrawSprites();
@@ -370,6 +376,7 @@ void Render(void) {
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
 }
 
+// Draws an image to the room buffer
 void DrawImage(uint16_t x, uint16_t y, const unsigned short * image, uint16_t w, uint16_t h) {
   // Perform clipping on the image so it fits in the room
   int16_t hh = h,ww = w;
