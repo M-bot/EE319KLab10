@@ -14,6 +14,7 @@ void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny);
 uint8_t RemoveSprite(uint8_t unique);
 void UpdateDoor(uint8_t d);
 void UpdateHeart(uint8_t max, uint8_t current);
+uint8_t GetNextUnique(void);
 
 struct sprite {
 	uint8_t x;
