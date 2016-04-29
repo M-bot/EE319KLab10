@@ -12,6 +12,7 @@
 #include "Timer0.h"
 #include "Chaser.h"
 #include "Rooms.h"
+#include "Timer1.h"
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
@@ -21,10 +22,15 @@
 int8_t mov[2];
 int8_t fire[2];
 int8_t mov_ready;
+int8_t fire_ready;
+uint8_t fire_checker=1;
+uint8_t move_checker=1;
 void Timer0A_Run(void);
+void Timer1A_Run(void);
 void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY);
 void Move_Random(uint8_t i);
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
+void Move_Directional(uint8_t i);
 /*struct objects{
 	uint8_t ID;     
 	uint8_t x;         //x coordinates
@@ -40,6 +46,7 @@ void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
 	uint8_t fires;   //boolean for firing logic
 	uint8_t Changes_Sprites; //boolean for animation
 	uint8_t Current_Health; 
+	uint8_t Move_Logic;  //0= chases character 1= moves randomly 2=moves away from character 3=Directional
 };*/
 //typedef struct objects objects_t;
 
@@ -65,7 +72,8 @@ int main(void){
   ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
-	Timer0_Init(Timer0A_Run,4000000); 
+	Timer0_Init(Timer0A_Run,6000000); 
+	Timer1_Init(Timer1A_Run,40000000);
 	
 	Room_Init(0,Objects);
   while(1){
@@ -84,7 +92,7 @@ int main(void){
 
 		if(mov_ready ==1)                                      //move player and any moving objects
 		{
-		Move(mov[0],mov[1]);
+		//Move(mov[0],mov[1],move_checker);
 		mov_ready=0;
 			for(int i =0;i<30;i++)
 				{if(Objects[i].moves==1)
@@ -93,8 +101,10 @@ int main(void){
 							Move_Towards(i,Get_x(),Get_y());
 						else if(Objects[i].Move_Logic==1)
 							Move_Random(i);
-						else
+						else if(Objects[i].Move_Logic==2)
 							Move_Away(i,Get_x(),Get_y());
+						else if(Objects[i].Move_Logic==3)
+							Move_Directional(i);
 					}
 					
 				}
@@ -120,6 +130,16 @@ int main(void){
 						
 				}
 			}
+			if(fire_ready)
+			{
+				fire_ready=0;
+				uint8_t i=0;
+				while(Objects[i].ID!=0)
+					i++;
+				if(fire[0] || fire[1])
+				Create_Shot(fire[0],fire[1],&Objects[i]);
+						
+			}
 		
 		
 
@@ -129,8 +149,17 @@ int main(void){
   }
 }
 void Timer0A_Run(void){
+
 	Mov_In(mov);
 	mov_ready=1;
+	
+}
+void Timer1A_Run(void){
+	if(fire_checker==0xFF)
+		fire_checker=0;
+	fire_checker++;
+	Fire_In(fire);
+	fire_ready=1;
 	
 }
 void SysTick_Handler(void){
@@ -151,6 +180,7 @@ void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY)   //this does not include 
 	else if(Objects[i].y>toY)
 		Objects[i].y -= Objects[i].speed;
 	UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
+	
 }
 void Move_Random(uint8_t i)
 {
@@ -160,4 +190,10 @@ void Move_Random(uint8_t i)
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY)
 {
 	
+}
+void Move_Directional(uint8_t i)
+{
+	Objects[i].x+=Objects[i].veli;
+	Objects[i].y+=Objects[i].velj;
+	UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
 }

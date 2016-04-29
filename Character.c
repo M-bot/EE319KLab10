@@ -6,6 +6,8 @@
 #include "Graphics2D.h"
 #include <math.h>
 #define PI 3.141592654
+#include "Rooms.h"
+#include "Shot.h"
 
 #define LEFT -1;
 #define STAY 0;
@@ -56,11 +58,11 @@ uint8_t Last_y;
 void Character_Init(void)
 {
 		Damage = 50;
-		Fire_Rate = 2;
-		Speed = 2;
+		Fire_Rate = 100;
+		Speed = 3;
 		Max_Health = 6;
 		Current_Health =6;
-	  Shot_Speed = 25;
+	  Shot_Speed = 1;
 		Width =18;
 		Height =21;
 	  Current_x = 61;
@@ -95,9 +97,10 @@ uint8_t Check_Collision(uint8_t test_x, uint8_t test_y, uint8_t test_width, uint
 	return (t1 && t2);
 }
 	
-void Move(int8_t x,int8_t y)
+void Move(int8_t x,int8_t y,uint8_t move_checker)
 {
-	if( (Current_x+Width + x*(Speed))<=140 && (int8_t)(Current_x + x*(Speed))>=0)
+	
+	if( (Current_x+Width + x*Speed)<=140 && (int8_t)(Current_x + x*Speed)>=0)
 	{
 		/*if(x!=0 && y!=0)
 		{
@@ -106,9 +109,9 @@ void Move(int8_t x,int8_t y)
 		}
 		else*/
 		Last_x= Current_x;
-		Current_x += x*(Speed);
+		Current_x += x*Speed;
 	}
-	if( (Current_y+Height + y*(Speed))<=80 && (int8_t)(Current_y + y*(Speed))>=0)
+	if( (Current_y+Height + y*Speed)<=80 && (int8_t)(Current_y + y*Speed)>=0)
 	{
 		/*if(x!=0 && y!=0)
 		{
@@ -117,11 +120,12 @@ void Move(int8_t x,int8_t y)
 		}
 		else*/
 		Last_y=Current_y;
-		Current_y += y*(Speed);
+		Current_y += y*Speed;
 		
 	}
 	//if(x!=0 && y!=0)
 	UpdateSprite(ID,Current_x,Current_y);
+	
 }
 void Place(int8_t x,int8_t y)
 {
@@ -156,4 +160,66 @@ uint8_t Get_x(void)
 uint8_t Get_y(void)
 {
 	return Current_y;
+}
+uint8_t Fire_Shot(uint8_t check)
+{
+	if(check%Fire_Rate==0)
+	 return 1;
+	return 0;
+}
+void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
+{
+	uint8_t x =  Current_x;
+	uint8_t y = Current_y;
+	if(xdir==-1 & ydir ==1)
+	{
+		x-=4;
+		y+=Height+2;
+	}
+	else if(xdir==-1 & ydir ==0)
+	{
+		x-=4;
+		y+=(Height/2);
+	}
+	else if(xdir==-1 & ydir ==-1)
+	{
+		x-=4;
+		y-=4;
+	}
+	else if(xdir==0 & ydir ==-1)
+	{
+		x+=Width/2;
+		y-=4;
+	}
+	else if(xdir==0 & ydir ==1)
+	{ x+=Width/2;
+		y+=Height+4;
+	}
+	else if(xdir==1 & ydir ==1)
+	{
+		x+=Width;
+		y+=Height+4;
+	}
+	else if(xdir==1 & ydir ==0)
+	{ x+=Width;
+		y+=Height/2;
+	}
+	else if(xdir==1 & ydir ==-1)
+	{	x+=Width;
+		y-=4;
+	}
+	o->x=x;
+	o->y=y;
+  o->ID=Shot_Init(x,y);
+	o->w=4;
+	o->h=4;
+	o->veli=Shot_Speed*(xdir);
+	o->velj=Shot_Speed*(ydir);
+	o->react=3;
+	o->moves=1;
+	o->fires=0;
+	o->Changes_Sprites=0;
+	o->Current_Health=1;
+	o->Move_Logic=3;
+	
 }

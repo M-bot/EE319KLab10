@@ -9,8 +9,8 @@ struct objects{
 	uint8_t Last_y;   //Last y coordinate
 	uint8_t w;        //width
 	uint8_t h;        //height
-	uint8_t veli;    // velocity in x direction
-	uint8_t velj;    // velocity in y direction
+	int8_t veli;    // velocity in x direction
+	int8_t velj;    // velocity in y direction
 	uint8_t react;   //code for what happens if collided with, if 0=impassible and dont take damage, 1=impassible and take damage, 2=passable and take damage, 3=take damage then remove sprite
 	uint8_t moves;  //boolean for move logic
 	uint8_t fires;   //boolean for firing logic
