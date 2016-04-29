@@ -207,7 +207,7 @@ void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny) {
 	}
 }
 
-void RemoveSprite(uint8_t unique) {
+uint8_t RemoveSprite(uint8_t unique) {
 	for(int x = 0; x < MAX_SPRITES; x++) {
 		if(sprites[x].unique == unique) {			
 			sprites[x].image = 0;
@@ -216,9 +216,10 @@ void RemoveSprite(uint8_t unique) {
 			sprites[x].x = 0;
 			sprites[x].y = 0;
 			sprites[x].unique = -1;
-			return;
+			return 0;
 		}
 	}
+	return 1;
 	ssize--;
 }
 

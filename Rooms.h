@@ -18,6 +18,9 @@ struct objects{
 	uint8_t Current_Health; 
 	uint8_t Move_Logic;   //0= chases character 1= moves randomly 2=moves away from character
 	uint8_t speed;
+	uint8_t Takes_Damage; //does it take damage?
+	uint8_t Damage_To_Deal; //How much health to take off on a hit
+	uint8_t Player; //is a players shot 0=false 1=true
 };
 
 void Room_Init(uint8_t num,objects_t Objects[30]);

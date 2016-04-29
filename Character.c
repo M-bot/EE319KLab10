@@ -57,7 +57,7 @@ uint8_t Last_y;
 
 void Character_Init(void)
 {
-		Damage = 50;
+		Damage = 2;
 		Fire_Rate = 100;
 		Speed = 3;
 		Max_Health = 6;
@@ -221,5 +221,7 @@ void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 	o->Changes_Sprites=0;
 	o->Current_Health=1;
 	o->Move_Logic=3;
+	o->Damage_To_Deal=Damage;
+	o->Player=1;
 	
 }

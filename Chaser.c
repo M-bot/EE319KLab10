@@ -101,5 +101,6 @@ void Chaser_Get_Logic(objects_t *o) // array[0]=width array[1]=height  array[2]=
 	o->Current_Health=10;
 	o->Move_Logic=0;
 	o->speed=1;
+	o->Takes_Damage=1;
 }
 

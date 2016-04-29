@@ -11,7 +11,7 @@ void DrawMap(void);
 void DrawBorderRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color1,uint16_t color2);
 uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, uint8_t initialx, uint8_t initialy);
 void UpdateSprite(uint8_t unique, uint8_t screenx, uint8_t screeny);
-void RemoveSprite(uint8_t unique);
+uint8_t RemoveSprite(uint8_t unique);
 void UpdateDoor(uint8_t d);
 void UpdateHeart(uint8_t max, uint8_t current);
 
