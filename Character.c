@@ -50,6 +50,8 @@ uint8_t Current_y;
 uint8_t Width;
 uint8_t Height;
 uint8_t ID;
+uint8_t Last_x;
+uint8_t Last_y;
 
 void Character_Init(void)
 {
@@ -64,7 +66,8 @@ void Character_Init(void)
 	  Current_x = 61;
 		Current_y = 30;
 		ID = AddSprite(Character_Sprite,Width,Height,Current_x,Current_y);
-		UpdateHeart(Max_Health/2,Current_Health);
+	  DrawHearts(Current_Health,Max_Health);
+	//	UpdateHeart(Max_Health,Current_Health);
 	
 }
 
@@ -102,6 +105,7 @@ void Move(int8_t x,int8_t y)
 			Current_x = Current_x/10 + (Current_x%10)/5;
 		}
 		else*/
+		Last_x= Current_x;
 		Current_x += x*(Speed);
 	}
 	if( (Current_y+Height + y*(Speed))<=80 && (int8_t)(Current_y + y*(Speed))>=0)
@@ -112,7 +116,9 @@ void Move(int8_t x,int8_t y)
 			Current_y= Current_y/10 + (Current_y%10)/5;
 		}
 		else*/
+		Last_y=Current_y;
 		Current_y += y*(Speed);
+		
 	}
 	//if(x!=0 && y!=0)
 	UpdateSprite(ID,Current_x,Current_y);
@@ -120,8 +126,34 @@ void Move(int8_t x,int8_t y)
 void Place(int8_t x,int8_t y)
 {
 	UpdateSprite(ID,x,y);
+	Last_x=Current_x;
+	Last_y=Current_y;
 	Current_x=x;
 	Current_y=y;
 }
-
-
+void Damage_Player(void)
+{
+	Current_Health--;
+	UpdateHeart(Max_Health,Current_Health);
+	if(Current_Health==0)
+	{
+		RemoveSprite(ID);
+		UpdateHeart(0,6);
+	}
+}
+uint8_t Get_Last_x(void)
+{
+	return Last_x;
+}
+uint8_t Get_Last_y(void)
+{
+	return Last_y;
+}
+uint8_t Get_x(void)
+{
+	return Current_x;
+}
+uint8_t Get_y(void)
+{
+	return Current_y;
+}

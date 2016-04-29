@@ -11,6 +11,7 @@
 #include "5Pos_Switch.h"
 #include "Timer0.h"
 #include "Chaser.h"
+#include "Rooms.h"
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
@@ -21,14 +22,30 @@ int8_t mov[2];
 int8_t fire[2];
 int8_t mov_ready;
 void Timer0A_Run(void);
-/*int main(void) {
-  TExaS_Init();
-  Graphics2DInit();
-  while(1) {
-		
-		Render();
-	}
-}*/
+void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY);
+void Move_Random(uint8_t i);
+void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
+/*struct objects{
+	uint8_t ID;     
+	uint8_t x;         //x coordinates
+	uint8_t y;        //y coordinates
+	uint8_t Last_x;   //Last x coordinate
+	uint8_t Last_y;   //Last y coordinate
+	uint8_t w;        //width
+	uint8_t h;        //height
+	uint8_t veli;    // velocity in x direction
+	uint8_t velj;    // velocity in y direction
+	uint8_t react;   //code for what happens if collided with, if 0=impassible and dont take damage, 1=impassible and take damage, 2=passable and take damage, 3=take damage then remove sprite
+	uint8_t moves;  //boolean for move logic
+	uint8_t fires;   //boolean for firing logic
+	uint8_t Changes_Sprites; //boolean for animation
+	uint8_t Current_Health; 
+};*/
+//typedef struct objects objects_t;
+
+objects_t Objects[30];
+
+
 /*int8_t Convert(uint32_t input){ //returns 1,0,or -1 depending on region of slide pot meter
   if(input>=(uint32_t)((0x0FFF)*(2/3)))
 		return 1;
@@ -37,8 +54,7 @@ void Timer0A_Run(void);
 	else
 		return 0;
 }*/
-uint8_t Chasers[8];
-uint8_t *ChasersPt =Chasers;
+uint32_t invinc =0;
 int isSensorReady = 0;
 int ADCData = 0;
 int main(void){
@@ -50,32 +66,63 @@ int main(void){
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
 	Timer0_Init(Timer0A_Run,4000000); 
-	*ChasersPt=Chaser_Init();
-	ChasersPt++;
+	
+	Room_Init(0,Objects);
   while(1){
+		uint8_t newroom=1;        //check to see if a new room needs to be rendered, this logic will change!!!
+		for(int i=0;i<30;i++)
+			if(Objects[i].ID!=0)
+				newroom=0;
+		if(newroom)
+			Room_Init(0,Objects);
+		
 		Render();
-		//while(!isADCReady);
-		//uint32_t i =0x008FFFFF; 
-		//while(!isSensorReady)
-		//isSensorReady=0;
-		if(mov_ready ==1)
+		
+		
+		if(invinc>0)    //i-frames
+		 invinc--;
+
+		if(mov_ready ==1)                                      //move player and any moving objects
 		{
 		Move(mov[0],mov[1]);
 		mov_ready=0;
+			for(int i =0;i<30;i++)
+				{if(Objects[i].moves==1)
+					{
+						if(Objects[i].Move_Logic==0)
+							Move_Towards(i,Get_x(),Get_y());
+						else if(Objects[i].Move_Logic==1)
+							Move_Random(i);
+						else
+							Move_Away(i,Get_x(),Get_y());
+					}
+					
+				}
 		}
-		int8_t coords[4];
-		uint8_t damage;
-		for(int i=0;i<8;i++)
-			if(Chasers[i]!=0)
+		uint8_t Collision;                                    //check for player collisions
+			for(int i=0;i<30;i++)
 			{
- 				Chaser_Get_Loc(Chasers[i],coords);
-				damage=Check_Collision(coords[0],coords[1],coords[2],coords[3]);
-				if(damage)
-					Place(90,50);
+				if(Objects[i].ID!=0)
+				{
+					Collision=Check_Collision(Objects[i].x,Objects[i].y,Objects[i].w,Objects[i].h);   
+						if(Collision)
+						{
+								if(Objects[i].react==2 && !(invinc))
+								{
+								Damage_Player();
+								invinc=20;
+								}
+								else if(Objects[i].react==0)
+								{
+									Place(Get_Last_x(),Get_Last_y());
+								}
+						}
+						
+				}
 			}
 		
+		
 
-			//PLACEHOLDERFUNCTION(Chacreter.sprite,CharacterMov(Dir)) //send x and y seperately
 			 
 		
 		
@@ -92,4 +139,25 @@ void SysTick_Handler(void){
 	//ADCData = ADC_In();
 	isSensorReady = 1;
   //PF2 ^= 0x04;      // Heartbeat
+}
+void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY)   //this does not include pathing...
+{
+	if(Objects[i].x<toX)
+		Objects[i].x += Objects[i].speed;
+	else if(Objects[i].x>toX)
+		Objects[i].x -= Objects[i].speed;
+	if(Objects[i].y<toY)
+		Objects[i].y += Objects[i].speed;
+	else if(Objects[i].y>toY)
+		Objects[i].y -= Objects[i].speed;
+	UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
+}
+void Move_Random(uint8_t i)
+{
+
+}
+
+void Move_Away(uint8_t i,uint8_t toX, uint8_t toY)
+{
+	
 }
