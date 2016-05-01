@@ -141,13 +141,16 @@ void Place(int8_t x,int8_t y)
 }
 void Damage_Player(void)
 {
-	Current_Health--;
-	UpdateHeart(Max_Health,Current_Health);
 	if(Current_Health==0)
 	{
 		RemoveSprite(ID);
-		UpdateHeart(0,6);
+		UpdateHeart(6,0);
 	}
+	else {
+		Current_Health--;
+		UpdateHeart(Max_Health,Current_Health);
+	}
+	
 }
 uint8_t Get_Last_x(void)
 {

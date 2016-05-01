@@ -14,6 +14,7 @@
 #include "Rooms.h"
 #include "Timer1.h"
 #include "Shot.h"
+#include "Map.h"
 
 
 #define PI 3.141592654
@@ -63,12 +64,12 @@ int ADCData = 0;
 int main(void){
   TExaS_Init();         // Bus clock is 80 MHz 
 	Graphics2DInit();
-	SysTick_Init(80000000/20);
-  ADC_Init();         // turn on ADC, set channel to 1
+	ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
-	Timer0_Init(Timer0A_Run,6000000); 
-	//Timer1_Init(Timer1A_Run,40000000);
+	Timer0_Init(Timer0A_Run,6000000);
+	while(mov[0] == 0 && mov[1] == 0);
+	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
 	
 	Room_Init(1,Objects);
   while(1){
@@ -305,13 +306,6 @@ void Timer0A_Run(void){
 	
 }
 
-void SysTick_Handler(void){
-  //PF2 ^= 0x04;      // Heartbeat
-  //PF2 ^= 0x04;      // Heartbeat
-	//ADCData = ADC_In();
-	isSensorReady = 1;
-  //PF2 ^= 0x04;      // Heartbeat
-}
 void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY)   //this does not include pathing...
 {
 	Objects[i].Last_x = Objects[i].x;

@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include "Graphics2D.h"
 #include "ST7735.h"
-#include "Timer0.h"
-
+#include "Timer1.h"
+#include "tm4c123gh6pm.h"
+#include "ADC.h"
+#include "Map.h"
 
 const unsigned short bg[] = {
  0x31EC, 0x4A8F, 0x428F, 0x428F, 0x29CC, 0x52F1, 0x29AC, 0x31ED, 0x3A2D, 0x320D, 0x214A, 0x52F1, 0x29CC, 0x4AB0, 0x298B, 0x216A,
@@ -101,6 +103,7 @@ const unsigned short heartempty_i[] = {
 #define MAP_CENTER_X (ARROW_X/2)
 #define MAP_CENTER_Y (HUD_HEIGHT/2)
 
+#define BLACK 0x0000
 #define DARK_GRAY 0x18C3
 #define GRAY 0x39C7
 #define LIGHT_GRAY 0x738E
@@ -111,6 +114,8 @@ const unsigned short heartempty_i[] = {
 #define UPDATE_DOOR 0x1
 #define UPDATE_HEART 0x2
 
+#define DIMMER_PIN 0x20
+
 uint16_t pixels[ROOM_WIDTH*ROOM_HEIGHT];
 // Change to vector later
 Sprite sprites[MAX_SPRITES];
@@ -120,6 +125,19 @@ uint8_t updatestatus = 0;
 uint8_t door = 0;
 uint8_t max_hearts = 0;
 uint8_t cur_hearts = 0;
+
+uint16_t duty = 100;
+uint16_t cur = 0;
+void Dimmer(void) {
+	if(cur == duty) {
+		GPIO_PORTB_DATA_R &= ~DIMMER_PIN;
+	}
+	if(cur == 100) {
+		cur = 0;
+		GPIO_PORTB_DATA_R |= DIMMER_PIN;
+	}
+	cur++;
+}
 
 // Initializes display and draws initial images
 void Graphics2DInit(void) {
@@ -151,6 +169,16 @@ void Graphics2DInit(void) {
   }
   // Draw the room
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
+	
+	int delay=0;
+	SYSCTL_RCGCGPIO_R |= 0x02;
+	delay = SYSCTL_RCGCGPIO_R;
+	GPIO_PORTB_DIR_R |= DIMMER_PIN;
+	GPIO_PORTB_DEN_R |= DIMMER_PIN;
+	GPIO_PORTB_AFSEL_R &= ~DIMMER_PIN;
+	GPIO_PORTB_DATA_R |= 0x20;
+	
+	Timer1_Init(Dimmer, 80000000/10000);
 }
 
 // Loads the given sprite data into an available slot and returns its unique identifier
@@ -275,16 +303,15 @@ void DrawBorderRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color1,
   DrawRect(x,y,w,h,color2);
 }
 
-// Fake map atm
+const uint16_t map_colors[8] = {DARK_GRAY,DARK_GRAY,DARK_GRAY,DARK_GRAY,GRAY,WHITE,LIGHT_GRAY,WHITE};
+const uint16_t map_bcolors[8] = {DARK_GRAY,DARK_GRAY,DARK_GRAY,DARK_GRAY,BLACK,BLACK,BLACK,BLACK};
 void DrawMap(void) {
-  // Center room is light gray
-  DrawBorderRect(MAP_CENTER_X-MAP_SIZE,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,LIGHT_GRAY,0);
-  // Discovered rooms are gray
-  DrawBorderRect(MAP_CENTER_X-MAP_SIZE*3,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
-  DrawBorderRect(MAP_CENTER_X-MAP_SIZE,MAP_CENTER_Y+MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
-  DrawBorderRect(MAP_CENTER_X+MAP_SIZE,MAP_CENTER_Y-MAP_SIZE*3/2,MAP_SIZE*2,MAP_SIZE,GRAY,0);
-  // Current room is white
-  DrawBorderRect(MAP_CENTER_X+MAP_SIZE,MAP_CENTER_Y-MAP_SIZE/2,MAP_SIZE*2,MAP_SIZE,WHITE,0);
+	for(int x = 0; x < MAP_DATA_SIZE; x++) {
+		for(int y = 0; y < MAP_DATA_SIZE; y++) {
+			uint8_t data = Get_Map_Data(x,y);
+			DrawBorderRect(MAP_CENTER_X-(MAP_SIZE+MAP_SIZE*2*(x-MAP_DATA_SIZE/2)),MAP_CENTER_Y-(MAP_SIZE/2+MAP_SIZE*(y-MAP_DATA_SIZE/2)),MAP_SIZE*2,MAP_SIZE,map_colors[data],map_bcolors[data]);
+		}
+	}
 }
 
 // Draws half a heart
@@ -299,14 +326,14 @@ void DrawHalfHeart(uint16_t x, uint16_t y) {
 }
 
 // Draws the life meter
-void DrawHearts(uint8_t life, uint8_t max) {
+void DrawHearts(uint8_t maxhealth, uint8_t health) {
 	ST7735_FillRect(HEART_X,HEART_Y,54,16,DARK_GRAY);
-  for(int l = 0; l <= 2; l++) {
-    for(int h = 0; h < 12 && h < max-l*12; h++) {
+  for(int l = 0; l < 2; l++) {
+    for(int h = 0; h < 12 && h < health-l*12; h++) {
       if(h % 2 == 0) {
-        DrawImageScreen(HEART_X+h/2*9,HEART_Y+7+8*l,h>=life-l*12 ? heartempty_i : heartfull_i,8,7,0);
+        DrawImageScreen(HEART_X+h/2*9,HEART_Y+7+8*l, h >= maxhealth - l * 12 ? heartempty_i : heartfull_i,8,7,0);
       }
-      if(life % 2 == 1 && h == life-1-l*12) {
+      if(maxhealth % 2 == 1 && h == maxhealth-1-l*12) {
         DrawHalfHeart(HEART_X+h/2*9,HEART_Y+7+8*l);
       }
     }
@@ -370,6 +397,9 @@ void ClearBuffer(void) {
 
 // Draws everything that needs to be drawn
 void Render(void) {
+	duty = ADC_In() * 100 / 0xFFF;
+	if(duty < 1) duty = 1;
+	if(duty > 99) duty = 99;
   ClearBuffer();
 	DrawSprites();
 	CheckUpdates();
