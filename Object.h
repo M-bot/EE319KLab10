@@ -16,7 +16,7 @@ struct Object {
 	Object *collidedWith;
 	uint8_t isRendered;
 	void(*logic)(Object *this, Object *player, uint64_t delta);
-	int16_t variables[10];
+	int32_t variables[10];
 };
 
 void RunLogic(uint64_t delta);

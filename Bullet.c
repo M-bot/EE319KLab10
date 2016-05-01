@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 #include "Bullet.h"
 
 #include "Object.h"
@@ -13,7 +14,7 @@
 #define velocityy variables[1]
 #define range variables[2]
 #define damage variables[3]
-#define fromPlayer variables[4]
+#define origin variables[4]
 
 void(*enemies[ENEMY_SIZE])(Object *this, Object player, uint64_t delta) = {0};
 
@@ -21,7 +22,7 @@ const unsigned short bullet[] = {
  0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF, 0xBC8E, 0xFFFA, 0xF779, 0xBC8E, 0xBC8E, 0xF779, 0xF779, 0xBC8E, 0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF,
 };
 
-void BulletCreate(Object *this, uint16_t x, uint16_t y, int16_t vx, int16_t vy, uint16_t rng, uint16_t dmg, uint8_t fp) {
+void BulletCreate(Object *this, uint16_t x, uint16_t y, int16_t vx, int16_t vy, uint16_t rng, uint16_t dmg, uint32_t originator) {
 	(*this).image = bullet;
 	(*this).width = BULLET_SIZE;
 	(*this).height = BULLET_SIZE;
@@ -35,7 +36,7 @@ void BulletCreate(Object *this, uint16_t x, uint16_t y, int16_t vx, int16_t vy, 
 	(*this).velocityy = vy;
 	(*this).range = rng;
 	(*this).damage = dmg;
-	(*this).fromPlayer = fp;
+	(*this).origin = originator;
 }
 
 void BulletLogic(Object *this, Object *player, uint64_t delta) {
@@ -45,20 +46,21 @@ void BulletLogic(Object *this, Object *player, uint64_t delta) {
 	int32_t dy = (int64_t)delta * (*this).velocityy / 100;
 	(*this).x += dx;
 	(*this).y += dy;
-	(*this).range -= abs(dx) + abs(dy);
+	(*this).range -= sqrt(dx*dx+dy*dy);
 	if((*this).range <= 0) {
 		(*this).isRendered = 0;
 		return;
 	}
 	if((*this).hasCollided) {
-		if((*(*this).collidedWith).logic == PlayerLogic && !(*this).fromPlayer) {
+		if((void*)(*(*this).collidedWith).logic != (void*)(*this).origin) {
 			(*this).isRendered = 0;
+		}
+		if((*(*this).collidedWith).logic == PlayerLogic && (*(Object*)(*this).origin).logic != PlayerLogic) {
 			(*player).variables[1] -= (*this).damage;
 			if((*player).variables[1] < 0) (*player).variables[1] = 0;
 			(*player).variables[7] = 1;
 		}
 		else if(this == (*this).collidedWith) {
-			(*this).isRendered = 0;
 			return;
 		}
 		else {

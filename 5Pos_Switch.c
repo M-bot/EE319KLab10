@@ -21,7 +21,7 @@ void Switch_Init(void)
 }
 //checks movement swtich for position and returns corresponding x and y coordinate
 //[{-1,0,1},{-1,0,1}] [x,y]  -1 =down or left, 0= neither direction 1= right or up
-void Mov_In(int8_t arr[2])
+void Mov_In(uint8_t arr[2])
 {
 	int Data = ~GPIO_PORTB_DATA_R;
   arr[0] =    ((Data&(0x08))>>3) + ((Data&(0x01))*-1);

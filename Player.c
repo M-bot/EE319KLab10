@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <math.h>
 #include "Player.h"
 
 #include "Object.h"
@@ -58,17 +59,23 @@ void PlayerLogic(Object *this, Object *player, uint64_t delta) {
 	if((*this).isRendered == 0) return;
 	int8_t mov[2];
 	Mov_In(mov);
-	int16_t dx = 
 	(*this).x += mov[0] * (int64_t)delta * (*this).velocity / 100;
 	(*this).y += mov[1] * (int64_t)delta * (*this).velocity / 100;
 	int8_t fire[2];
 	Fire_In(fire);
 	int16_t centerx = (*this).x + (*this).width * 50;
 	int16_t centery = (*this).y + (*this).height * 50;
-	if((fire[0] != 0 || fire[1] != 0) && cooldown == 0) {
+	if((fire[0] != 0 || fire[1] != 0) && cooldown == 0) {	
+		int32_t vx = fire[0];
+		int32_t vy = fire[1];
+		int32_t c = sqrt(vx*vx+vy*vy);
+		vx *= (*this).velocity;
+		vy *= (*this).velocity;
+		vx /= c;
+		vy /= c;
 		cooldown = (*this).bulletCooldown ;
 		BulletCreate(RequestObject(0),centerx+(FIRE_WIDTH*50*fire[0]),centery+(FIRE_HEIGHT*50*fire[1])
-			,fire[0]*(*this).bulletVelocity,fire[1]*(*this).bulletVelocity,(*this).bulletRange,(*this).bulletDamage,1);
+			,fire[0]*(*this).bulletVelocity,fire[1]*(*this).bulletVelocity,(*this).bulletRange,(*this).bulletDamage,(uint32_t)PlayerLogic);
 	}
 	
 	if(cooldown != 0) {

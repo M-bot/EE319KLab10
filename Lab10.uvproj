@@ -505,6 +505,11 @@
               <FileType>1</FileType>
               <FilePath>.\Horf.c</FilePath>
             </File>
+            <File>
+              <FileName>AttackFly.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\AttackFly.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

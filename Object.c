@@ -29,7 +29,7 @@ void RunLogic(uint64_t delta) {
 					objects[y].hasCollided = 1;
 					objects[x].collidedWith = &objects[y];
 					objects[y].collidedWith = &objects[x];
-					if(!(objects[x].isPassable || objects[y].isPassable)) {
+					if(!(objects[x].isPassable | objects[y].isPassable)) {
 						ObjectRevert(&objects[x]);
 						ObjectRevert(&objects[y]);
 					}
