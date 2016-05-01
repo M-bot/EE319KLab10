@@ -76,8 +76,7 @@ int ADCData = 0;
 int main(void){
   TExaS_Init();         // Bus clock is 80 MHz 
 	Graphics2DInit();
-	SysTick_Init(80000000/20);
-  ADC_Init();         // turn on ADC, set channel to 1
+	ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
 	Timer0_Init(Timer0A_Run,6000000);
