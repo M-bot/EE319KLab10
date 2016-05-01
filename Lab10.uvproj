@@ -470,6 +470,26 @@
               <FileType>2</FileType>
               <FilePath>.\random.s</FilePath>
             </File>
+            <File>
+              <FileName>Character.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Character.c</FilePath>
+            </File>
+            <File>
+              <FileName>Rooms.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Rooms.c</FilePath>
+            </File>
+            <File>
+              <FileName>Shot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Shot.c</FilePath>
+            </File>
+            <File>
+              <FileName>Chaser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Chaser.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -504,6 +524,11 @@
               <FileName>Timer0.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Timer0.h</FilePath>
+            </File>
+            <File>
+              <FileName>Map.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Map.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -68,17 +68,36 @@ int main(void){
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
 	Timer0_Init(Timer0A_Run,6000000);
-	while(mov[0] == 0 && mov[1] == 0);
+	//while(mov[0] == 0 && mov[1] == 0);
 	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
-	
-	Room_Init(1,Objects);
+	uint8_t Center = Get_Center();
+	uint8_t Current_Room[2]={Center,Center};
+	Room_Init(Get_Map_Data(Current_Room[0],Current_Room[1]),Objects);
   while(1){
-		uint8_t newroom=1;        //check to see if a new room needs to be rendered, this logic will change!!!
+		uint8_t moverooms=1;        //check to see if a new room needs to be rendered, this logic will change!!!
 		for(int i=0;i<size;i++)
-			if(Objects[i].ID!=0)
-				newroom=0;
-		if(newroom)
-			Room_Init(0,Objects);
+			if(Objects[i].Takes_Damage==1)
+				moverooms=0;
+		if(moverooms)
+		{
+			if(Get_Map_Data(Current_Room[0]-1,Current_Room[1])!=0)
+			{
+				
+			}
+			if(Get_Map_Data(Current_Room[0],Current_Room[1]-1)!=0)
+			{
+				
+			}
+			if(Get_Map_Data(Current_Room[0]+1,Current_Room[1])!=0)
+			{
+				
+			}
+			if(Get_Map_Data(Current_Room[0]+1,Current_Room[1]+1)!=0)
+			{
+				
+			}
+			
+		}
 		
 		Render();
 		
@@ -126,6 +145,11 @@ int main(void){
 								{
 									Damage_Player();
 									invinc=20;
+									Objects[i].ID=RemoveSprite(Objects[i].ID);
+								}
+								else if(Objects[i].Stat_to_change!=0)                                    //code for detecting items to be picked up
+								{
+									Update_Stats(Objects[i].Stat_to_change,Objects[i].Stat_delta);
 									Objects[i].ID=RemoveSprite(Objects[i].ID);
 								}
 						}

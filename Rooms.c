@@ -50,16 +50,29 @@ void Room_Init(uint8_t num,objects_t Objects[30])
 {uint8_t i=0;
 	if(num==1)
 	{
-		Objects[i].x=10;
-		Objects[i].y=40;
-		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
-		Pooter_Get_Logic(&Objects[i]);
-		i++;
-		Objects[i].x=70;
-		Objects[i].y=20;
-		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
 		Rock_Get_Logic(&(Objects[i]));
+		Objects[i].x=1;
+		Objects[i].y=1;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
 		i++;
+		Rock_Get_Logic(&(Objects[i]));
+		Objects[i].x=140-Objects[i].w;
+		Objects[i].y=80-Objects[i].h;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		i++;
+		Rock_Get_Logic(&(Objects[i]));
+		Objects[i].x=140-Objects[i].w;
+		Objects[i].y=1;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		i++;
+		Rock_Get_Logic(&(Objects[i]));
+		Objects[i].x=1;
+		Objects[i].y=80-Objects[i].h;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		i++;
+		Objects[i].ID=Arrow_Right_Init();
+		i++;
+		
 	
 		
 	}

@@ -88,6 +88,10 @@ void Set_Room(uint8_t x, uint8_t y, uint8_t discur) {
 			break;
 	}
 }
+uint8_t Get_Center(void)
+{
+	return MAP_DATA_SIZE/2;
+}
 
 uint32_t delay;
 int main1(void) {

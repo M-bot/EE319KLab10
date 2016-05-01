@@ -31,3 +31,4 @@ uint8_t Get_y(void);
 uint8_t Fire_Shot(void);
 
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o);
+void Update_Stats(uint8_t code, uint8_t delta);
