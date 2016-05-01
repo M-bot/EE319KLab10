@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include "Graphics2D.h"
 #include "ST7735.h"
-#include "Timer0.h"
+#include "Timer1.h"
+#include "tm4c123gh6pm.h"
+#include "ADC.h"
 
 
 const unsigned short bg[] = {
@@ -111,6 +113,8 @@ const unsigned short heartempty_i[] = {
 #define UPDATE_DOOR 0x1
 #define UPDATE_HEART 0x2
 
+#define DIMMER_PIN 0x20
+
 uint16_t pixels[ROOM_WIDTH*ROOM_HEIGHT];
 // Change to vector later
 Sprite sprites[MAX_SPRITES];
@@ -120,6 +124,19 @@ uint8_t updatestatus = 0;
 uint8_t door = 0;
 uint8_t max_hearts = 0;
 uint8_t cur_hearts = 0;
+
+uint16_t duty = 100;
+uint16_t cur = 0;
+void Dimmer(void) {
+	if(cur == duty) {
+		GPIO_PORTB_DATA_R &= ~DIMMER_PIN;
+	}
+	if(cur == 100) {
+		cur = 0;
+		GPIO_PORTB_DATA_R |= DIMMER_PIN;
+	}
+	cur++;
+}
 
 // Initializes display and draws initial images
 void Graphics2DInit(void) {
@@ -151,6 +168,16 @@ void Graphics2DInit(void) {
   }
   // Draw the room
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
+	
+	int delay=0;
+	SYSCTL_RCGCGPIO_R |= 0x02;
+	delay = SYSCTL_RCGCGPIO_R;
+	GPIO_PORTB_DIR_R |= DIMMER_PIN;
+	GPIO_PORTB_DEN_R |= DIMMER_PIN;
+	GPIO_PORTB_AFSEL_R &= ~DIMMER_PIN;
+	GPIO_PORTB_DATA_R |= 0x20;
+	
+	Timer1_Init(Dimmer, 80000000/10000);
 }
 
 // Loads the given sprite data into an available slot and returns its unique identifier
@@ -370,6 +397,9 @@ void ClearBuffer(void) {
 
 // Draws everything that needs to be drawn
 void Render(void) {
+	duty = ADC_In() * 100 / 0xFFF;
+	if(duty < 1) duty = 1;
+	if(duty > 99) duty = 99;
   ClearBuffer();
 	DrawSprites();
 	CheckUpdates();
