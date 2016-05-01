@@ -57,18 +57,6 @@ void Move_Directional(uint8_t i);
 	
  
 };*/
-//typedef struct objects objects_t;
-
-
-
-/*int8_t Convert(uint32_t input){ //returns 1,0,or -1 depending on region of slide pot meter
-  if(input>=(uint32_t)((0x0FFF)*(2/3)))
-		return 1;
-	else if (input<=((0x0FFF)*(1/3)))
-		return -1;
-	else
-		return 0;
-}*/
 uint32_t invinc =0;
 int isSensorReady = 0;
 int ADCData = 0;
@@ -129,7 +117,7 @@ int main(void){
 								Damage_Player();
 								invinc=20;
 								}
-								else if(Objects[i].react==0)
+								else if(Objects[i].react==0 || Objects[i].react==4)
 								{
 									Place(Get_Last_x(),Get_Last_y());
 								}
@@ -180,14 +168,17 @@ int main(void){
 										{
 											Objects[i].ID=RemoveSprite(Objects[i].ID);
 										}
-										else if(Objects[i].moves && Objects[j].react==0)
+										else if(Objects[i].moves && (Objects[j].react==0  || Objects[j].react==4))
 										{
 											Objects[i].x=Objects[i].Last_x;
 											Objects[i].y=Objects[i].Last_y;
 											
 											UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
 										}
-										
+										if((Objects[i].veli!=0 || Objects[i].velj!=0) && Objects[j].react==4)
+										{
+											Objects[i].ID=RemoveSprite(Objects[i].ID);
+										}
 									}
 								
 							}
@@ -203,8 +194,8 @@ int main(void){
 				uint8_t i=0;
 				while(Objects[i].ID!=0)
 					i++;
-				if(fire[0] || fire[1])
-				Create_Shot(fire[0],fire[1],&Objects[i]);
+				if((fire[0] || fire[1]) && (Fire_Shot()))
+					Create_Shot(fire[0],fire[1],&Objects[i]);
 				
 				for(int i=0;i<size;i++)
 				{
@@ -275,7 +266,7 @@ int main(void){
 								Objects[j].veli=Objects[i].Shot_Speed*(1);
 								Objects[j].velj=Objects[i].Shot_Speed*(-1);
 							}
-							Objects[j].ID=Shot_Init(Objects[j].x,Objects[j].y);
+							Objects[j].ID=Shot_E_Init(Objects[j].x,Objects[j].y);
 							Objects[j].w=4;
 							Objects[j].h=4;
 							Objects[j].react=3;
@@ -304,13 +295,10 @@ int main(void){
   }
 }
 void Timer0A_Run(void){
- if(fire_checker==0x10)
- {
-		
-		fire_checker=0;
+ 
 	Fire_In(fire);
 	fire_ready=1;
- }
+ 
  fire_checker++;
 	Mov_In(mov);
 	mov_ready=1;

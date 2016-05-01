@@ -18,6 +18,12 @@ const unsigned short Shot[] = {
 
 
 };
+const unsigned short Shot_E[] = {
+ 0xFFFF, 0x1074, 0x1074, 0xFFFF, 0x1074, 0xA4DF, 0x83BF, 0x1074, 0x1074, 0x83BF, 0x83BF, 0x1074, 0xFFFF, 0x1074, 0x1074, 0xFFFF,
+
+
+};
+
 
 
 
@@ -36,4 +42,8 @@ uint8_t Shot_Init(uint8_t x,uint8_t y)
 //	Render();
 	return(id);
 	
+}
+uint8_t Shot_E_Init(uint8_t x, uint8_t y)
+{
+	return(AddSprite(Shot_E,4,4,x,y));
 }

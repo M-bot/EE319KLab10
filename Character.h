@@ -28,6 +28,6 @@ uint8_t Get_x(void);
 
 uint8_t Get_y(void);
 
-uint8_t Fire_Shot(uint8_t check);
+uint8_t Fire_Shot(void);
 
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o);

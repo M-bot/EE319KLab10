@@ -65,6 +65,7 @@ const unsigned short Pooter[] = {
  0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0xFFFF, 0xFFFF,
 
 };
+//11x11
 const unsigned short Pedestal[] = {
  0xFFFF, 0xFFFF, 0xFFFF, 0x10A4, 0x10A3, 0x10A3, 0x10C4, 0x10A4, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x18E4, 0x2104, 0x2966, 0x3187,
  0x3187, 0x2946, 0x2925, 0x18E4, 0x18E4, 0xFFFF, 0x18E4, 0x2966, 0x2925, 0x31A8, 0x39E9, 0x3187, 0x2946, 0x2946, 0x2966, 0x2966,
@@ -96,12 +97,12 @@ uint8_t Pooter_Init(uint8_t x,uint8_t y)
 }
 uint8_t Rock_Init(uint8_t x,uint8_t y)
 {
-	return (AddSprite(Rock,14,10,x,y));
+	return (AddSprite(Rock,15,15,x,y));
 } 
 
 uint8_t Pedestal_Init(uint8_t x,uint8_t y)
 {
-	return (AddSprite(Rock,14,10,x,y));
+	return (AddSprite(Pedestal,11,11,x,y));
 } 
 
 
@@ -143,7 +144,7 @@ void Pooter_Get_Logic(objects_t *o)
 	o->Move_Logic=0;
 	o->speed=1;
 	o->Takes_Damage=1;
-	o->Fire_Rate=3;
+	o->Fire_Rate=20;
 	o->Shot_Speed=2;
 	o->Range=20;
 }
@@ -155,7 +156,7 @@ void Rock_Get_Logic(objects_t *o)
 	o->h=15;
 	o->veli=0;
 	o->velj=0;
-	o->react=0;
+	o->react=4;
 	o->moves=0;
 	o->fires=0;
 	o->Changes_Sprites=0;

@@ -55,6 +55,11 @@ void Room_Init(uint8_t num,objects_t Objects[30])
 		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
 		Pooter_Get_Logic(&Objects[i]);
 		i++;
+		Objects[i].x=70;
+		Objects[i].y=20;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		Rock_Get_Logic(&(Objects[i]));
+		i++;
 	
 		
 	}

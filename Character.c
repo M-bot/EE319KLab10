@@ -55,12 +55,14 @@ uint8_t ID;
 uint8_t Last_x;
 uint8_t Last_y;
 uint8_t Range;
+uint8_t Current_Fire_Rate;
 
 void Character_Init(void)
 {
 		Range=25;
 		Damage = 2;
 		Fire_Rate = 5;
+		Current_Fire_Rate=0;
 		Speed = 3;
 		Max_Health = 6;
 		Current_Health =6;
@@ -163,11 +165,17 @@ uint8_t Get_y(void)
 {
 	return Current_y;
 }
-uint8_t Fire_Shot(uint8_t check)
+uint8_t Fire_Shot(void)
 {
-	if(check%Fire_Rate==0)
+	if(Fire_Rate==Current_Fire_Rate)
+	{
+	Current_Fire_Rate=0;
 	 return 1;
+		
+	}
+	Current_Fire_Rate++;
 	return 0;
+	
 }
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 {
