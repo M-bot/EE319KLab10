@@ -431,11 +431,6 @@
               <FilePath>.\startup.s</FilePath>
             </File>
             <File>
-              <FileName>Character.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Character.c</FilePath>
-            </File>
-            <File>
               <FileName>ADC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ADC.c</FilePath>
@@ -461,29 +456,9 @@
               <FilePath>.\Timer0.c</FilePath>
             </File>
             <File>
-              <FileName>Chaser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Chaser.c</FilePath>
-            </File>
-            <File>
-              <FileName>Rooms.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Rooms.c</FilePath>
-            </File>
-            <File>
-              <FileName>Pooter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Pooter.c</FilePath>
-            </File>
-            <File>
               <FileName>Timer1.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Timer1.c</FilePath>
-            </File>
-            <File>
-              <FileName>Shot.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Shot.c</FilePath>
             </File>
             <File>
               <FileName>Map.c</FileName>
