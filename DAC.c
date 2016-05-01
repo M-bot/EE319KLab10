@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include "tm4c123gh6pm.h"
 #define Dac_Bits 0x3F
+#define Extra 0x10
 // Code files contain the actual implemenation for public functions
 // this file also contains an private functions and private data
 
@@ -21,7 +22,7 @@
 // Output: none
 void DAC_Init(void){
 	volatile unsigned long delay;							
-  SYSCTL_RCGC2_R |= 0x10;      											// 1) E
+  SYSCTL_RCGC2_R |= 0x12;      											// 1) E
   delay = SYSCTL_RCGC2_R;      											// 2) wait
 	GPIO_PORTE_AMSEL_R &= ~Dac_Bits; 									// 3) disable analog function on PE5-0
   GPIO_PORTE_PCTL_R &= ~0x00FFFFFF; 								// 4) enable regular GPIO
@@ -29,6 +30,12 @@ void DAC_Init(void){
   GPIO_PORTE_AFSEL_R &= ~Dac_Bits; 									// 6) regular function on PE5-0
   GPIO_PORTE_DEN_R |= Dac_Bits;    									// 7) enable digital on PE5-0
 	GPIO_PORTE_DR8R_R |= Dac_Bits;										// 8) prevent frying
+	GPIO_PORTB_AMSEL_R &= ~Extra; 									// 3) disable analog function on PB4
+  GPIO_PORTB_PCTL_R &= ~0x000F0000; 								// 4) enable regular GPIO
+  GPIO_PORTB_DIR_R |= Extra;    									// 5) outputs on PB4
+  GPIO_PORTB_AFSEL_R &= ~Extra; 									// 6) regular function on PB4
+  GPIO_PORTB_DEN_R |= Extra;    									// 7) enable digital on PB4
+	GPIO_PORTB_DR8R_R |= Extra;										// 8) prevent frying
 }
 
 // **************DAC_Out*********************
@@ -39,4 +46,6 @@ void DAC_Out(uint32_t data)
 {
 	GPIO_PORTE_DATA_R &= ~Dac_Bits;
 	GPIO_PORTE_DATA_R |= Dac_Bits & data;
+	GPIO_PORTB_DATA_R &= ~Extra;
+	GPIO_PORTB_DATA_R |= (data >> 6) << 4;
 }

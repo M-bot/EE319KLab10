@@ -8,12 +8,17 @@ Current Roadmap:
 - [x] Obtain Lab 10 Starter Files
 - [x] ~~Implement 3D rendering (Progress can be seen [here](https://www.youtube.com/watch?v=6jVMg5p2KdE))~~
 - [x] Select game idea
-- [ ] Implement 2D rendering
-- [ ] Create sprites
-- [ ] Implement input (buttons and slide pot) logic
-- [ ] Implement game logic
-- [ ] Implement output (audio and rendering) logic
-- [ ] Build physical circuit
+- [x] Implement 2D rendering
+- [x] Create sprites
+- [x] Implement input button logic
+- [x] Implement audio logic
+- [x] Build physical circuit
+- [x] Implement movement logic
+- [x] Implement firing logic
+- [x] Implement collision logic
+- [ ] Implement enemy logic
+- [ ] Implement room logic
+- [ ] Implement input slide pot logic
 - [ ] Quality Assurance & Testing
 
 Created by Miguel Obregon and Bryce Cotner
