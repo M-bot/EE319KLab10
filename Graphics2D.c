@@ -87,35 +87,6 @@ const unsigned short heartempty_i[] = {
 
 };
 
-#define WIDTH 160
-#define HEIGHT 128
-#define ROOM_WIDTH 140
-#define ROOM_HEIGHT 80 
-#define HUD_HEIGHT (HEIGHT-ROOM_HEIGHT-WALL*2)
-#define HEART_X (WIDTH-54)
-#define HEART_Y (HUD_HEIGHT)/2-8
-#define WALL 10
-#define ITEM_SIZE (HUD_HEIGHT*5/8)
-#define ITEM_Y (HUD_HEIGHT*3/16)
-#define ITEM_X (HEART_X-ITEM_SIZE-5)
-#define ARROW_X (ITEM_X-ITEM_SIZE-5)
-#define MAP_SIZE ((HUD_HEIGHT-8)/5)
-#define MAP_CENTER_X (ARROW_X/2)
-#define MAP_CENTER_Y (HUD_HEIGHT/2)
-
-#define BLACK 0x0000
-#define DARK_GRAY 0x18C3
-#define GRAY 0x39C7
-#define LIGHT_GRAY 0x738E
-#define WHITE 0xFFFF
-
-#define MAX_SPRITES 100
-
-#define UPDATE_DOOR 0x1
-#define UPDATE_HEART 0x2
-
-#define DIMMER_PIN 0x20
-
 uint16_t pixels[ROOM_WIDTH*ROOM_HEIGHT];
 // Change to vector later
 Sprite sprites[MAX_SPRITES];
@@ -178,6 +149,7 @@ void Graphics2DInit(void) {
 	GPIO_PORTB_AFSEL_R &= ~DIMMER_PIN;
 	GPIO_PORTB_DATA_R |= 0x20;
 	
+	ADC_Init();
 	Timer1_Init(Dimmer, 80000000/10000);
 }
 
@@ -400,10 +372,9 @@ void Render(void) {
 	duty = ADC_In() * 100 / 0xFFF;
 	if(duty < 1) duty = 1;
 	if(duty > 99) duty = 99;
-  ClearBuffer();
-	DrawSprites();
 	CheckUpdates();
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
+  ClearBuffer();
 }
 
 // Draws an image to the room buffer

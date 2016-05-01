@@ -22,9 +22,7 @@
  http://users.ece.utexas.edu/~valvano/
  */
 #include <stdint.h>
-#include "Character.h"
 #include "tm4c123gh6pm.h"
-#include "5Pos_Switch.h" 
 void (*PeriodicTask0)(void);   // user function
 
 // ***************** Timer0_Init ****************

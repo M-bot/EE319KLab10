@@ -470,6 +470,41 @@
               <FileType>2</FileType>
               <FilePath>.\random.s</FilePath>
             </File>
+            <File>
+              <FileName>Object.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Object.c</FilePath>
+            </File>
+            <File>
+              <FileName>GameTick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GameTick.c</FilePath>
+            </File>
+            <File>
+              <FileName>Player.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Player.c</FilePath>
+            </File>
+            <File>
+              <FileName>Bullet.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Bullet.c</FilePath>
+            </File>
+            <File>
+              <FileName>Rock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Rock.c</FilePath>
+            </File>
+            <File>
+              <FileName>Spike.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Spike.c</FilePath>
+            </File>
+            <File>
+              <FileName>Horf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Horf.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
