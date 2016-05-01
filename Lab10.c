@@ -133,6 +133,7 @@ int main(void){
 									Place(Get_Last_x(),Get_Last_y());
 								}
 						}
+				
 						if(Objects[i].Damage_To_Deal>0)    //Objects Collisions with Objects
 						{
 							for(int j=0;j<size;j++)
@@ -239,7 +240,15 @@ void Move_Random(uint8_t i)
 
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY)
 {
-	
+	if(Objects[i].x<toX && Objects[i].x - Objects[i].speed>0)
+		Objects[i].x -= Objects[i].speed;
+	else if(Objects[i].x>toX && Objects[i].x + Objects[i].speed<140)
+		Objects[i].x += Objects[i].speed;
+	if(Objects[i].y<toY  && Objects[i].y - Objects[i].speed>0)
+		Objects[i].y -= Objects[i].speed;
+	else if(Objects[i].y>toY  && Objects[i].y +Objects[i].speed<140)
+		Objects[i].y += Objects[i].speed;
+	UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
 }
 void Move_Directional(uint8_t i)
 {

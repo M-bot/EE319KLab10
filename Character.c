@@ -62,7 +62,7 @@ void Character_Init(void)
 		Speed = 3;
 		Max_Health = 6;
 		Current_Health =6;
-	  Shot_Speed = 1;
+	  Shot_Speed = 3;
 		Width =18;
 		Height =21;
 	  Current_x = 61;
