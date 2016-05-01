@@ -48,8 +48,8 @@ void SysTick_Handler(void){
 	out |= Decode(&bgm);
 	uint8_t snd = Decode(&cur);
 	if(snd != 0) {
-		out /= 3;
-		out += snd;
+		out *= (out-snd)/out;
+		out = snd;
 	}
 	DAC_Out(out);
 }
