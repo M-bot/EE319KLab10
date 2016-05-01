@@ -15,6 +15,14 @@
 
 struct objects{
 	uint8_t ID;     
+	uint8_t xo;
+	uint8_t yo;
+	int8_t rangex;  //range of shot
+	int8_t rangey;  
+	uint8_t Range;  //how many pixels do shots travel produced by this object
+	uint8_t Fire_Rate;  //how often does it fire
+	uint8_t Fire_Tick; //keeps track of Fire_Rate
+	uint8_t Shot_Speed;
 	uint8_t x;         //x coordinates
 	uint8_t y;        //y coordinates
 	uint8_t Last_x;   //Last x coordinate
@@ -33,6 +41,8 @@ struct objects{
 	uint8_t Move_Logic;  //0= chases character 1= moves randomly 2=moves away from character 3=Directional
 	uint8_t speed;   //how fast it moves
 	uint8_t Player; //is a players shot 0=false 1=true
+	uint8_t Stat_to_change; //1=damage 2=fire_rate 3=Speed 4=Shot_Speed 5=Range 6=Max_Health 7=Current_Health
+	uint8_t Stat_delta;
 };
 typedef struct objects objects_t;
 
@@ -44,6 +54,7 @@ void Room_Init(uint8_t num,objects_t Objects[30])
 		Objects[i].y=40;
 		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
 		Pooter_Get_Logic(&Objects[i]);
+		i++;
 	
 		
 	}
@@ -53,6 +64,8 @@ void Room_Init(uint8_t num,objects_t Objects[30])
 		Objects[i].y=10;
 		Objects[i].ID=Chaser_Init(Objects[i].x,Objects[i].y);
 		Chaser_Get_Logic(&Objects[i]);
+		i++;
+		
 	}
 	
 }

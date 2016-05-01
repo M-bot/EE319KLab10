@@ -13,6 +13,8 @@
 #include "Chaser.h"
 #include "Rooms.h"
 #include "Timer1.h"
+#include "Shot.h"
+
 
 #define PI 3.141592654
 #define PF1       (*((volatile uint32_t *)0x40025008))
@@ -28,7 +30,6 @@ uint8_t move_checker=1;
 uint8_t size=100;
 objects_t Objects[100];
 void Timer0A_Run(void);
-void Timer1A_Run(void);
 void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY);
 void Move_Random(uint8_t i);
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
@@ -79,7 +80,7 @@ int main(void){
 	Switch_Init(); //prepare Port B and D for switches
 	Character_Init();
 	Timer0_Init(Timer0A_Run,6000000); 
-	Timer1_Init(Timer1A_Run,40000000);
+	//Timer1_Init(Timer1A_Run,40000000);
 	
 	Room_Init(1,Objects);
   while(1){
@@ -98,7 +99,7 @@ int main(void){
 
 		if(mov_ready ==1)                                      //move player and any moving objects
 		{
-		//Move(mov[0],mov[1],move_checker);
+		Move(mov[0],mov[1],move_checker);
 		mov_ready=0;
 			for(int i =0;i<size;i++)
 				{if(Objects[i].moves==1 && Objects[i].ID!=0)
@@ -132,10 +133,16 @@ int main(void){
 								{
 									Place(Get_Last_x(),Get_Last_y());
 								}
+								else if(Objects[i].react==3 && !(invinc) && Objects[i].Player==0)
+								{
+									Damage_Player();
+									invinc=20;
+									Objects[i].ID=RemoveSprite(Objects[i].ID);
+								}
 						}
 				
-						if(Objects[i].Damage_To_Deal>0)    //Objects Collisions with Objects
-						{
+						   //Objects Collisions with Objects
+						
 							for(int j=0;j<size;j++)
 							{
 								if(Objects[j].ID!=0)
@@ -161,7 +168,7 @@ int main(void){
 												}
 										if(t1 && t2)
 										{
-										if(Objects[j].Takes_Damage==1 && Objects[i].Player==1 && i!=j) //if Objects J is damaged by tears
+										if(Objects[i].Damage_To_Deal>0 && Objects[j].Takes_Damage==1 && Objects[i].Player==1 && i!=j) //if Objects J is damaged by tears
 										{
 											Objects[j].Current_Health-=Objects[i].Damage_To_Deal;
 												if(Objects[j].Current_Health<=0)
@@ -169,17 +176,26 @@ int main(void){
 											Objects[i].ID=RemoveSprite(Objects[i].ID);
 									
 										}
-										else if(Objects[j].react==4 && i!=j)  //If Object J breaks shots remove Object[i]
+										else if(Objects[i].Damage_To_Deal>0 && Objects[j].react==4 && i!=j)  //If Object J breaks shots remove Object[i]
 										{
 											Objects[i].ID=RemoveSprite(Objects[i].ID);
 										}
+										else if(Objects[i].moves && Objects[j].react==0)
+										{
+											Objects[i].x=Objects[i].Last_x;
+											Objects[i].y=Objects[i].Last_y;
+											
+											UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
+										}
+										
 									}
-								}
+								
 							}
 						}
 					
 						
 				}
+				
 			}
 			if(fire_ready)    //create shots
 			{
@@ -189,7 +205,95 @@ int main(void){
 					i++;
 				if(fire[0] || fire[1])
 				Create_Shot(fire[0],fire[1],&Objects[i]);
+				
+				for(int i=0;i<size;i++)
+				{
+					if(Objects[i].fires && Objects[i].ID!=0 )
+					{
+					  Objects[i].Fire_Tick++;
+						if(Objects[i].Fire_Tick==Objects[i].Fire_Rate)
+						{
+							uint8_t j=0;
+							while(Objects[j].ID!=0)
+								j++;
+							uint8_t cx=Get_x();
+							uint8_t cy=Get_y();
+							uint8_t cw=Get_Width();
+							uint8_t ch=Get_Height();
+						  Objects[j].x =  Objects[i].x;
+							Objects[j].y = Objects[i].y;
+							if(Objects[i].x>cx+cw & Objects[i].y>cy+ch)
+							{
+								Objects[j].x-=4;
+								Objects[j].y+=Objects[i].h+2;
+								Objects[j].veli=Objects[i].Shot_Speed*(-1);
+								Objects[j].velj=Objects[i].Shot_Speed*(1);
+							}
+							else if(Objects[i].x>cx+cw & Objects[i].y>=cy & Objects[i].y<=cy+ch)
+							{
+								Objects[j].x-=4;
+								Objects[j].y+=(Objects[i].h/2);
+								Objects[j].veli=Objects[i].Shot_Speed*(-1);
+								Objects[j].velj=0;
+							}
+							else if(Objects[i].x>cx+cw & Objects[i].y<cy)
+							{
+								Objects[j].x-=4;
+								Objects[j].y-=4;
+								Objects[j].veli=Objects[i].Shot_Speed*(-1);
+								Objects[j].velj=Objects[i].Shot_Speed*(-1);
+							}
+							else if(Objects[i].x>=cx & Objects[i].x<=cx+cw & Objects[i].y>cy+ch)
+							{
+								Objects[j].x+=Objects[i].w/2;
+								Objects[j].y-=4;
+								Objects[j].veli=Objects[i].Shot_Speed*(0);
+								Objects[j].velj=Objects[i].Shot_Speed*(-1);
+							}
+							else if(Objects[i].x>=cx & Objects[i].x<=cx+cw & Objects[i].y<cy)
+							{ Objects[j].x+=Objects[i].w/2;
+								Objects[j].y+=Objects[i].h+4;
+								Objects[j].veli=Objects[i].Shot_Speed*(0);
+								Objects[j].velj=Objects[i].Shot_Speed*(1);
+							}
+							else if(Objects[i].x<cx & Objects[i].y<cy)
+							{
+								Objects[j].x+=Objects[i].w;
+								Objects[j].y+=Objects[i].h+4;
+								Objects[j].veli=Objects[i].Shot_Speed*(1);
+								Objects[j].velj=Objects[i].Shot_Speed*(1);
+							}
+							else if(Objects[i].x<cx & Objects[i].y>=cy & Objects[i].y<=cy+ch)
+							{ Objects[j].x+=Objects[i].w;
+								Objects[j].y+=Objects[i].h/2;
+								Objects[j].veli=Objects[i].Shot_Speed*(1);
+								Objects[j].velj=Objects[i].Shot_Speed*(0);
+							}
+							else if(Objects[i].x<cx & Objects[i].y>cy+ch)
+							{	Objects[j].x+=Objects[i].w;
+								Objects[j].y-=4;
+								Objects[j].veli=Objects[i].Shot_Speed*(1);
+								Objects[j].velj=Objects[i].Shot_Speed*(-1);
+							}
+							Objects[j].ID=Shot_Init(Objects[j].x,Objects[j].y);
+							Objects[j].w=4;
+							Objects[j].h=4;
+							Objects[j].react=3;
+							Objects[j].moves=1;
+							Objects[j].fires=0;
+							Objects[j].Changes_Sprites=0;
+							Objects[j].Current_Health=1;
+							Objects[j].Move_Logic=3;
+							Objects[j].Player=0;
+							Objects[j].xo=Objects[j].x;
+							Objects[j].yo=Objects[j].y;
+							Objects[j].rangex=Objects[i].Range;
+							Objects[j].rangey=Objects[i].Range;
 						
+						Objects[i].Fire_Tick=0;
+						} 
+					}
+				}
 			}
 		
 		
@@ -200,19 +304,19 @@ int main(void){
   }
 }
 void Timer0A_Run(void){
-
+ if(fire_checker==0x10)
+ {
+		
+		fire_checker=0;
+	Fire_In(fire);
+	fire_ready=1;
+ }
+ fire_checker++;
 	Mov_In(mov);
 	mov_ready=1;
 	
 }
-void Timer1A_Run(void){
-	if(fire_checker==0xFF)
-		fire_checker=0;
-	fire_checker++;
-	Fire_In(fire);
-	fire_ready=1;
-	
-}
+
 void SysTick_Handler(void){
   //PF2 ^= 0x04;      // Heartbeat
   //PF2 ^= 0x04;      // Heartbeat
@@ -222,6 +326,8 @@ void SysTick_Handler(void){
 }
 void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY)   //this does not include pathing...
 {
+	Objects[i].Last_x = Objects[i].x;
+	Objects[i].Last_y = Objects[i].y;
 	if(Objects[i].x<toX)
 		Objects[i].x += Objects[i].speed;
 	else if(Objects[i].x>toX)
@@ -240,6 +346,8 @@ void Move_Random(uint8_t i)
 
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY)
 {
+	Objects[i].Last_x = Objects[i].x;
+	Objects[i].Last_y = Objects[i].y;
 	if(Objects[i].x<toX && Objects[i].x - Objects[i].speed>0)
 		Objects[i].x -= Objects[i].speed;
 	else if(Objects[i].x>toX && Objects[i].x + Objects[i].speed<140)
@@ -252,6 +360,18 @@ void Move_Away(uint8_t i,uint8_t toX, uint8_t toY)
 }
 void Move_Directional(uint8_t i)
 {
+	if(Objects[i].veli<0)
+	  Objects[i].rangex+= Objects[i].veli ;
+	else
+		Objects[i].rangex-= Objects[i].veli ;
+	if(Objects[i].velj<0)
+		Objects[i].rangey+= (Objects[i].velj);
+	else
+		Objects[i].rangey-= (Objects[i].velj);
+	if(Objects[i].rangex<0 || Objects[i].rangey<0)
+		Objects[i].ID=RemoveSprite(Objects[i].ID);
+	Objects[i].Last_x = Objects[i].x;
+	Objects[i].Last_y = Objects[i].y;
 	if( (Objects[i].x+Objects[i].veli>140) || (Objects[i].x+Objects[i].veli<0))
 	Objects[i].ID=RemoveSprite(Objects[i].ID);
 	else if( (Objects[i].y+Objects[i].velj>80) || (Objects[i].y+Objects[i].velj<0))
@@ -262,4 +382,6 @@ void Move_Directional(uint8_t i)
 	Objects[i].y+=Objects[i].velj;
 	UpdateSprite(Objects[i].ID,Objects[i].x,Objects[i].y);
 	}
+	
+
 }

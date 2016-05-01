@@ -54,11 +54,13 @@ uint8_t Height;
 uint8_t ID;
 uint8_t Last_x;
 uint8_t Last_y;
+uint8_t Range;
 
 void Character_Init(void)
 {
+		Range=25;
 		Damage = 2;
-		Fire_Rate = 100;
+		Fire_Rate = 5;
 		Speed = 3;
 		Max_Health = 6;
 		Current_Health =6;
@@ -223,5 +225,18 @@ void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 	o->Move_Logic=3;
 	o->Damage_To_Deal=Damage;
 	o->Player=1;
+	o->xo=x;
+	o->yo=y;
+	o->rangex=Range;
+	o->rangey=Range;
 	
+	
+}
+uint8_t Get_Width(void)
+{
+	return Width;
+}
+uint8_t Get_Height(void)
+{
+	return Height;
 }

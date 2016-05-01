@@ -4,7 +4,8 @@
 //input none
 //output none
 void Character_Init(void);
-
+uint8_t Get_Width(void);
+uint8_t Get_Height(void);
 typedef struct objects objects_t;
 
 

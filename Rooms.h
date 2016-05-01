@@ -3,6 +3,14 @@
 typedef struct objects objects_t;
 struct objects{
 	uint8_t ID;     
+	uint8_t xo;
+	int8_t rangex;
+	int8_t rangey;
+	uint8_t Range;
+	uint8_t Fire_Rate;
+	uint8_t Fire_Tick;
+	uint8_t Shot_Speed;
+	uint8_t yo;
 	uint8_t x;         //x coordinates
 	uint8_t y;        //y coordinates
 	uint8_t Last_x;   //Last x coordinate
@@ -21,6 +29,8 @@ struct objects{
 	uint8_t Takes_Damage; //does it take damage?
 	uint8_t Damage_To_Deal; //How much health to take off on a hit
 	uint8_t Player; //is a players shot 0=false 1=true
+	uint8_t Stat_to_change; //1=damage 2=fire_rate 3=Speed 4=Shot_Speed 5=Range 6=Max_Health 7=Current_Health
+	uint8_t Stat_delta;
 };
 
 void Room_Init(uint8_t num,objects_t Objects[30]);
