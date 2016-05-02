@@ -31,6 +31,7 @@ struct objects{
 	uint8_t Player; //is a players shot 0=false 1=true
 	uint8_t Stat_to_change; //1=damage 2=fire_rate 3=Speed 4=Shot_Speed 5=Range 6=Max_Health 7=Current_Health
 	uint8_t Stat_delta;
+	uint8_t Arrow; //1=Left 2=UP 3=Down 4=right
 };
 
 void Room_Init(uint8_t num,objects_t Objects[30]);

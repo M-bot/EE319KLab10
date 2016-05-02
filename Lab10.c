@@ -35,6 +35,8 @@ void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY);
 void Move_Random(uint8_t i);
 void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
 void Move_Directional(uint8_t i);
+void Update_Objects(uint8_t i);
+uint8_t Get_Next_Object(void);
 
 /*struct objects{
 	uint8_t ID;     
@@ -55,9 +57,20 @@ void Move_Directional(uint8_t i);
 	uint8_t Player //is a players shot 0=false 1=true
 	uint8_t Takes_Damage; //does it take damage?
 	uint8_t Damage_To_Deal; //How much health to take off on a hit
-	
+	uint8_t Arrow; //1=Left 2=UP 3=Down 4=right
  
 };*/
+struct map_of_objects{
+	uint8_t visited;
+	uint8_t room_x;
+	uint8_t room_y;
+	
+	
+	
+};
+typedef struct map_of_objects mapo_t;
+mapo_t map_of_objects[25];
+
 uint32_t invinc =0;
 int isSensorReady = 0;
 int ADCData = 0;
@@ -72,29 +85,50 @@ int main(void){
 	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
 	uint8_t Center = Get_Center();
 	uint8_t Current_Room[2]={Center,Center};
+	uint8_t Next_Object_Index;
 	Room_Init(Get_Map_Data(Current_Room[0],Current_Room[1]),Objects);
-  while(1){
+	uint8_t map_index=0;
+	map_of_objects[map_index].room_x=Current_Room[0];
+	map_of_objects[map_index].room_y=Current_Room[1];
+	
+  while(1)
+	{
+		
 		uint8_t moverooms=1;        //check to see if a new room needs to be rendered, this logic will change!!!
 		for(int i=0;i<size;i++)
-			if(Objects[i].Takes_Damage==1)
+			if(Objects[i].Takes_Damage==1 && Objects[i].ID!=0)
 				moverooms=0;
+			
 		if(moverooms)
 		{
-			if(Get_Map_Data(Current_Room[0]-1,Current_Room[1])!=0)
+			
+			if(Get_Room_Data(Current_Room[0]+1,Current_Room[1]-1)!=0)
 			{
+				Next_Object_Index=Get_Next_Object();
+				Objects[Next_Object_Index].ID =Arrow_Left_Init();
+				Objects[Next_Object_Index].Arrow=1;
+				
 				
 			}
-			if(Get_Map_Data(Current_Room[0],Current_Room[1]-1)!=0)
+			if(Get_Room_Data(Current_Room[0],Current_Room[1]+1)!=0)
 			{
+				Next_Object_Index=Get_Next_Object();
+				Objects[Next_Object_Index].ID =Arrow_Up_Init();
+				Objects[Next_Object_Index].Arrow=2;
 				
 			}
-			if(Get_Map_Data(Current_Room[0]+1,Current_Room[1])!=0)
+			if(Get_Room_Data(Current_Room[0]-1,Current_Room[1])!=0)
 			{
+				Next_Object_Index=Get_Next_Object();
+				Objects[Next_Object_Index].ID =Arrow_Right_Init();
+				Objects[Next_Object_Index].Arrow=4;
 				
 			}
-			if(Get_Map_Data(Current_Room[0]+1,Current_Room[1]+1)!=0)
+			if(Get_Room_Data(Current_Room[0],Current_Room[1]-1)!=0)
 			{
-				
+				Next_Object_Index=Get_Next_Object();
+				Objects[Next_Object_Index].ID =Arrow_Down_Init();
+				Objects[Next_Object_Index].Arrow=3;
 			}
 			
 		}
@@ -137,6 +171,27 @@ int main(void){
 								Damage_Player();
 								invinc=20;
 								}
+								else if(Objects[i].Arrow!=0)
+								{
+									
+									switch(Objects[i].Arrow)
+									{
+										case 1:
+											
+											break;
+										case 2:
+											
+											break;
+										case 3:
+											
+											break;
+										case 4:
+											
+											break;
+										
+											
+									}
+								}
 								else if(Objects[i].react==0 || Objects[i].react==4)
 								{
 									Place(Get_Last_x(),Get_Last_y());
@@ -152,6 +207,7 @@ int main(void){
 									Update_Stats(Objects[i].Stat_to_change,Objects[i].Stat_delta);
 									Objects[i].ID=RemoveSprite(Objects[i].ID);
 								}
+								
 						}
 				
 						   //Objects Collisions with Objects
@@ -390,4 +446,42 @@ void Move_Directional(uint8_t i)
 	}
 	
 
+}
+uint8_t Get_Next_Object(void)
+{
+	uint8_t i=0;
+	while(i!=0)
+		i++;
+	     
+	Objects[i].xo=0;
+	Objects[i].rangex=0;
+	Objects[i].rangey=0;
+	Objects[i].Range=0;
+	Objects[i].Fire_Rate=0;
+	Objects[i].Fire_Tick=0;
+	Objects[i].Shot_Speed=0;
+	Objects[i].yo=0;
+	Objects[i].x=0;       
+	Objects[i].y=0;       
+	Objects[i].Last_x=0;  
+	Objects[i].Last_y=0;   
+	Objects[i].w=0;     
+	Objects[i].h=0;     
+	Objects[i].veli=0;   
+	Objects[i].velj=0;   
+	Objects[i].react=10;  
+	Objects[i].moves=0; 
+	Objects[i].fires=0;
+	Objects[i].Changes_Sprites=0; 
+	Objects[i].Current_Health=0; 
+	Objects[i].Move_Logic=0;  
+	Objects[i].speed=0;
+	Objects[i].Takes_Damage=0; 
+	Objects[i].Damage_To_Deal=0; 
+	Objects[i].Player=0; 
+	Objects[i].Stat_to_change=0; 
+	Objects[i].Stat_delta=0;
+	Objects[i].Arrow=0; 
+		
+	return i;
 }

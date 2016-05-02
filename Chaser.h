@@ -14,3 +14,6 @@ void Rock_Get_Logic(objects_t *o);
 uint8_t Pedestal_Init(uint8_t x,uint8_t y);
 void Pedestal_Get_Logic(objects_t *o);
 uint8_t Arrow_Right_Init();
+uint8_t Arrow_Up_Init();
+uint8_t Arrow_Left_Init();
+uint8_t Arrow_Down_Init();
