@@ -113,6 +113,7 @@ const unsigned short heartempty_i[] = {
 
 #define UPDATE_DOOR 0x1
 #define UPDATE_HEART 0x2
+#define UPDATE_MAP 0x4
 
 #define DIMMER_PIN 0x20
 
@@ -254,6 +255,10 @@ void UpdateHeart(uint8_t max, uint8_t current) {
 	updatestatus |= UPDATE_HEART;
 }
 
+void UpdateMap(void) {
+	updatestatus |= UPDATE_MAP;
+}
+
 // Checks the status flag to see if there is any rendering data that
 // needs to be pushed to the screen
 void CheckUpdates(void) {
@@ -268,6 +273,9 @@ void CheckUpdates(void) {
 	if((updatestatus & UPDATE_HEART) == UPDATE_HEART) {
 		DrawHearts(cur_hearts,max_hearts);
 		updatestatus &= ~UPDATE_HEART;
+	}
+	if((updatestatus & UPDATE_MAP) == UPDATE_MAP) {
+		DrawMap();
 	}
 }
 

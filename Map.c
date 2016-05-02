@@ -73,12 +73,13 @@ uint8_t Get_Map_Data(uint8_t x, uint8_t y) {
 }
 
 void Set_Room(uint8_t x, uint8_t y, uint8_t discur) {
+	UpdateMap();
 	switch(discur) {
 		case 0:
-			map[y][x] &= ~0x20;	// Current
+			map[y][x] |= 0x20;	// Current
 			break;
-		case 1:
-			map[y][x] |= 0x20;	// Remove current
+		case 1:	
+			map[y][x] &= ~0x20; // Remove current
 			break;
 		case 2:
 			map[y][x] |= 0x40;	// Visited
