@@ -30,7 +30,7 @@ void Spread_Rooms(int8_t x, int8_t y, uint8_t first) {
 			Spread_Rooms(dx, dy, 0);
 		}
 	}
-	map[y][x] = first ? 1 : RandomInteger(8)+1; // Change to actual number of possible rooms
+	map[y][x] = first ? 1 : RandomInteger(1)+2; // Change to actual number of possible rooms
 }
  
 void Map_Generate(void) {
@@ -75,10 +75,10 @@ uint8_t Get_Map_Data(uint8_t x, uint8_t y) {
 void Set_Room(uint8_t x, uint8_t y, uint8_t discur) {
 	switch(discur) {
 		case 0:
-			map[y][x] &= ~0x20;	// Current
+			map[y][x] |= 0x20;	// Current
 			break;
-		case 1:
-			map[y][x] |= 0x20;	// Remove current
+		case 1:	
+			map[y][x] &= ~0x20; // Remove current
 			break;
 		case 2:
 			map[y][x] |= 0x40;	// Visited
@@ -87,6 +87,10 @@ void Set_Room(uint8_t x, uint8_t y, uint8_t discur) {
 			map[y][x] |= 0x80;	// Discovered
 			break;
 	}
+}
+uint8_t Get_Center(void)
+{
+	return MAP_DATA_SIZE/2;
 }
 
 uint32_t delay;

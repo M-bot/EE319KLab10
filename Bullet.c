@@ -5,10 +5,12 @@
 
 #include "Object.h"
 #include "Player.h"
+#include "Horf.h"
+#include "AttackFly.h"
 #include "Graphics2D.h"
 
 #define BULLET_SIZE 4
-#define ENEMY_SIZE 1
+#define ENEMY_SIZE 2
 
 #define velocityx variables[0]
 #define velocityy variables[1]
@@ -16,14 +18,18 @@
 #define damage variables[3]
 #define origin variables[4]
 
-void(*enemies[ENEMY_SIZE])(Object *this, Object player, uint64_t delta) = {0};
+void(*enemies[ENEMY_SIZE])(Object *this, Object *player, uint64_t delta) = {HorfLogic, AttackFlyLogic};
 
 const unsigned short bullet[] = {
  0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF, 0xBC8E, 0xFFFA, 0xF779, 0xBC8E, 0xBC8E, 0xF779, 0xF779, 0xBC8E, 0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF,
 };
 
+const unsigned short bulletred[] = {
+ 0xFFFF, 0x1074, 0x1074, 0xFFFF, 0x1074, 0xA4DF, 0x83BF, 0x1074, 0x1074, 0x83BF, 0x83BF, 0x1074, 0xFFFF, 0x1074, 0x1074, 0xFFFF,
+};
+
 void BulletCreate(Object *this, uint16_t x, uint16_t y, int16_t vx, int16_t vy, uint16_t rng, uint16_t dmg, uint32_t originator) {
-	(*this).image = bullet;
+	(*this).image = originator == (uint32_t)PlayerLogic ? bullet : bulletred;
 	(*this).width = BULLET_SIZE;
 	(*this).height = BULLET_SIZE;
 	(*this).x = x;
@@ -51,11 +57,11 @@ void BulletLogic(Object *this, Object *player, uint64_t delta) {
 		(*this).isRendered = 0;
 		return;
 	}
-	if((*this).hasCollided) {
+	if((*this).hasCollided && (*(*this).collidedWith).logic != BulletLogic) {
 		if((void*)(*(*this).collidedWith).logic != (void*)(*this).origin) {
 			(*this).isRendered = 0;
 		}
-		if((*(*this).collidedWith).logic == PlayerLogic && (*(Object*)(*this).origin).logic != PlayerLogic) {
+		if((*(*this).collidedWith).logic == PlayerLogic && (*this).origin != (uint32_t)PlayerLogic) {
 			(*player).variables[1] -= (*this).damage;
 			if((*player).variables[1] < 0) (*player).variables[1] = 0;
 			(*player).variables[7] = 1;
@@ -65,7 +71,7 @@ void BulletLogic(Object *this, Object *player, uint64_t delta) {
 		}
 		else {
 			for(int x = 0; x < ENEMY_SIZE; x++) {
-				if((*(*this).collidedWith).logic == enemies[x]) {
+				if((*(*this).collidedWith).logic == enemies[x] && (*this).origin == (uint32_t)PlayerLogic) {
 					(*(*this).collidedWith).variables[0] -= (*this).damage;
 				}
 			}

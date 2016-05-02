@@ -372,9 +372,10 @@ void Render(void) {
 	duty = ADC_In() * 100 / 0xFFF;
 	if(duty < 1) duty = 1;
 	if(duty > 99) duty = 99;
-	CheckUpdates();
+}
+
+void DrawBuffer(void) {
   ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
-  ClearBuffer();
 }
 
 // Draws an image to the room buffer

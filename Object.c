@@ -1,13 +1,27 @@
 #include <stdint.h>
 #include "Object.h"
 
+#include "ST7735.h"
 #include "Graphics2D.h"
+#include "Map.h"
+#include "ADC.h"
+#include "Player.h"
+#include "Rock.h"
+#include "Spike.h"
+#include "Horf.h"
+#include "AttackFly.h"
 
 #define SIZE 50
 
 Object objects[SIZE];
 uint8_t playerIndex;
 uint8_t objectIndex;
+
+void RunInit(void) {
+	Map_Init(ADC_In());
+	PlayerCreate(RequestObject(1));
+	UpdateHeart(6,6);
+}
 
 void RunLogic(uint64_t delta) {
 	for(uint8_t x = 0; x < SIZE; x++) {
@@ -37,23 +51,34 @@ void RunLogic(uint64_t delta) {
 			}
 		}
 	}
-}
-
-void RunRender(void) {
 	if(objects[playerIndex].variables[7]) {
 		UpdateHeart(objects[playerIndex].variables[2],objects[playerIndex].variables[1]);
 		objects[playerIndex].variables[7] = 0;
 	}
-	for(uint8_t x = 0; x < objectIndex; x++) {
-		if(objects[x].isRendered)
-			DrawImage(objects[x].x/100, objects[x].y/100, objects[x].image, objects[x].width, objects[x].height);
-		else {
-			for(int y = x+1; y < objectIndex; y++) {
-				objects[y-1] = objects[y];
+}
+
+uint8_t RunRender(void) {
+	CheckUpdates();
+	ClearBuffer();
+	if(objects[playerIndex].isRendered) {
+		for(uint8_t x = 0; x < objectIndex; x++) {
+			if(objects[x].isRendered)
+				DrawImage(objects[x].x/100, objects[x].y/100, objects[x].image, objects[x].width, objects[x].height);
+			else {
+				for(int y = x+1; y < objectIndex; y++) {
+					objects[y-1] = objects[y];
+				}
+				x--;
+				objectIndex--;
 			}
-			x--;
-			objectIndex--;
 		}
+		DrawBuffer();
+		return 1;
+	}
+	else {
+		ST7735_FillRect(0,0,160,128,0);
+		DrawString(0,0,"GAME OVER",0xFFFF);
+		return 0;
 	}
 }
 

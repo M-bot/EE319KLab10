@@ -19,8 +19,9 @@ struct Object {
 	int32_t variables[10];
 };
 
+void RunInit(void);
 void RunLogic(uint64_t delta);
-void RunRender(void);
+uint8_t RunRender(void);
 Object* RequestObject(uint8_t isPlayer);
 void ObjectLogic(Object *this, Object *player, uint64_t delta);
 void ObjectRevert(Object *this);

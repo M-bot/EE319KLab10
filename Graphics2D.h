@@ -44,6 +44,8 @@ uint8_t RemoveSprite(uint8_t unique);
 void UpdateDoor(uint8_t d);
 void UpdateHeart(uint8_t max, uint8_t current);
 uint8_t GetNextUnique(void);
+void DrawBuffer(void);
+void CheckUpdates(void);
 
 struct sprite {
 	uint8_t x;
