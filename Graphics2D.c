@@ -147,10 +147,23 @@ void Graphics2DInit(void) {
   // Set screen to landscape
   ST7735_SetRotation(1);
   
-  // Draw initial screen
-  // Clear the buffer to the default background
-  ClearBuffer();
-  // Draw the HUD
+
+
+	
+	int delay=0;
+	SYSCTL_RCGCGPIO_R |= 0x02;
+	delay = SYSCTL_RCGCGPIO_R;
+	GPIO_PORTB_DIR_R |= DIMMER_PIN;
+	GPIO_PORTB_DEN_R |= DIMMER_PIN;
+	GPIO_PORTB_AFSEL_R &= ~DIMMER_PIN;
+	GPIO_PORTB_DATA_R |= 0x20;
+	
+	Timer1_Init(Dimmer, 80000000/10000);
+}
+
+void InitDraw(void) {
+	Output_Clear();
+	  // Draw the HUD
   ST7735_FillRect(0,0,WIDTH,HUD_HEIGHT,DARK_GRAY);
   
   DrawMap();
@@ -168,18 +181,6 @@ void Graphics2DInit(void) {
   for(int x = 0; x < 4; x++) {
     DrawWall(x,1);
   }
-  // Draw the room
-  ST7735_DrawBitmap(WALL,HEIGHT-WALL,pixels,ROOM_WIDTH,ROOM_HEIGHT);
-	
-	int delay=0;
-	SYSCTL_RCGCGPIO_R |= 0x02;
-	delay = SYSCTL_RCGCGPIO_R;
-	GPIO_PORTB_DIR_R |= DIMMER_PIN;
-	GPIO_PORTB_DEN_R |= DIMMER_PIN;
-	GPIO_PORTB_AFSEL_R &= ~DIMMER_PIN;
-	GPIO_PORTB_DATA_R |= 0x20;
-	
-	Timer1_Init(Dimmer, 80000000/10000);
 }
 
 // Loads the given sprite data into an available slot and returns its unique identifier

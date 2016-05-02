@@ -15,6 +15,7 @@
 #include "Timer1.h"
 #include "Shot.h"
 #include "Map.h"
+#include "Splash.h"
 
 
 #define PI 3.141592654
@@ -80,11 +81,13 @@ int ADCData = 0;
 int main(void){
   TExaS_Init();         // Bus clock is 80 MHz 
 	Graphics2DInit();
-	ADC_Init();         // turn on ADC, set channel to 1
 	Switch_Init(); //prepare Port B and D for switches
-	Character_Init();
 	Timer0_Init(Timer0A_Run,6000000);
-	//while(mov[0] == 0 && mov[1] == 0);
+	ST7735_DrawBitmap(0,101,splash,160,72);
+	while(mov[0] == 0 && mov[1] == 0);
+	InitDraw();
+	ADC_Init();         // turn on ADC, set channel to 1
+	Character_Init();
 	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
 	uint8_t Center = Get_Center();
 	uint8_t Current_Room[2]={Center,Center};

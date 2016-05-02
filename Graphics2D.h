@@ -16,6 +16,7 @@ void UpdateDoor(uint8_t d);
 void UpdateHeart(uint8_t max, uint8_t current);
 void UpdateMap(void);
 uint8_t GetNextUnique(void);
+void InitDraw(void);
 
 struct sprite {
 	uint8_t x;

@@ -1,7 +1,7 @@
-# Lab 10 - The Wiring of Issac (tentative)
+# Lab 10 - The Binding of RY (tentative)
 Final Project for EE319K (Introduction to Embedded Systems), as of Spring 2016
 
-The _The Wiring of Issac_ project combines the aspects of Labs 1-9 into a video game based off The Binding of Issac. The project includes an analog and digital input driver, audio driver, LCD driver, and graphics engine.
+The _The Binding of RY_ project combines the aspects of Labs 1-9 into a video game based off The Binding of Issac. The project includes an analog and digital input driver, audio driver, LCD driver, and graphics engine.
 
 Current Roadmap:
 - [x] Create Repository
@@ -16,9 +16,10 @@ Current Roadmap:
 - [x] Implement movement logic
 - [x] Implement firing logic
 - [x] Implement collision logic
-- [ ] Implement enemy logic
-- [ ] Implement room logic
-- [ ] Implement input slide pot logic
+- [x] Implement enemy logic
+- [x] Implement room logic
+- [x] Implement input slide pot logic
+- [ ] Create rooms
 - [ ] Quality Assurance & Testing
 
 Created by Miguel Obregon and Bryce Cotner
