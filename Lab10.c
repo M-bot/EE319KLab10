@@ -44,6 +44,7 @@ uint8_t Set_Map_Index(uint8_t x,uint8_t y);
 void Remove_Visited_Sprites(void);
 uint8_t map_index;
 void Remove_All_Sprites(void);
+uint8_t move_sprite;
 
 /*struct objects{
 	uint8_t ID;     
@@ -166,6 +167,23 @@ int main(void){
 		if(mov_ready ==1)                                      //move player and any moving objects
 		{
 		Move(mov[0],mov[1],move_checker);
+			if(mov[0]!=0 && mov[1]!=0)
+			{
+				if(move_sprite==1)
+				{		
+						
+						move_sprite=2;
+				}
+				else if(move_sprite==2)
+				{	
+					move_sprite=1;
+				}
+			}
+			else
+			{
+				move_sprite=1;
+				
+			}
 		mov_ready=0;
 			for(int i =0;i<size;i++)
 				{if(Objects[i].moves==1 && Objects[i].ID!=0)
