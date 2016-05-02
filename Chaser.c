@@ -174,6 +174,7 @@ void Chaser_Get_Logic(objects_t *o)
 	o->Move_Logic=0;
 	o->speed=1;
 	o->Takes_Damage=1;
+	o->Clearable=1;
 }
 
 void Pooter_Get_Logic(objects_t *o) 
@@ -195,6 +196,7 @@ void Pooter_Get_Logic(objects_t *o)
 	o->Fire_Rate=20;
 	o->Shot_Speed=2;
 	o->Range=20;
+	o->Clearable=1;
 }
 void Rock_Get_Logic(objects_t *o) 
 {

@@ -48,8 +48,43 @@ struct objects{
 };
 typedef struct objects objects_t;
 
-void Room_Init(uint8_t num,objects_t Objects[30])
-{uint8_t i=0;
+void Room_Init(uint8_t num,objects_t Objects[100])
+{uint8_t i;
+	for(i=0;i<100;i++)
+	{
+		Objects[i].xo=0;
+	Objects[i].rangex=0;
+	Objects[i].rangey=0;
+	Objects[i].Range=0;
+	Objects[i].Fire_Rate=0;
+	Objects[i].Fire_Tick=0;
+	Objects[i].Shot_Speed=0;
+	Objects[i].yo=0;
+	Objects[i].x=0;       
+	Objects[i].y=0;       
+	Objects[i].Last_x=0;  
+	Objects[i].Last_y=0;   
+	Objects[i].w=0;     
+	Objects[i].h=0;     
+	Objects[i].veli=0;   
+	Objects[i].velj=0;   
+	Objects[i].react=10;  
+	Objects[i].moves=0; 
+	Objects[i].fires=0;
+	Objects[i].Changes_Sprites=0; 
+	Objects[i].Current_Health=0; 
+	Objects[i].Move_Logic=0;  
+	Objects[i].speed=0;
+	Objects[i].Takes_Damage=0; 
+	Objects[i].Damage_To_Deal=0; 
+	Objects[i].Player=0; 
+	Objects[i].Stat_to_change=0; 
+	Objects[i].Stat_delta=0;
+	Objects[i].Arrow=0; 
+	Objects[i].Clearable=0;
+	}
+	i=0;
+		
 	if(num==1)
 	{
 		Rock_Get_Logic(&(Objects[i]));
@@ -72,21 +107,46 @@ void Room_Init(uint8_t num,objects_t Objects[30])
 		Objects[i].y=80-Objects[i].h;
 		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
 		i++;
-		Objects[i].ID=Arrow_Right_Init();
+		Objects[i].x=2;
+		Objects[i].y=30;
+		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
+		Pooter_Get_Logic(&Objects[i]);
 		i++;
+
 		
 	
 		
 	}
-	if(num==0)
+	if(num==2)
 	{
 		Objects[i].x=10;
 		Objects[i].y=10;
 		Objects[i].ID=Chaser_Init(Objects[i].x,Objects[i].y);
 		Chaser_Get_Logic(&Objects[i]);
 		i++;
-		
 	}
+	if(num==3)
+	{
+		Objects[i].x=10;
+		Objects[i].y=10;
+		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
+		Pooter_Get_Logic(&Objects[i]);
+		i++;
+	}
+	if(num==4)
+	{
+		Objects[i].x=10;
+		Objects[i].y=10;
+		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
+		Pooter_Get_Logic(&Objects[i]);
+		i++;
+		Rock_Get_Logic(&(Objects[i]));
+		Objects[i].x=1;
+		Objects[i].y=80-Objects[i].h;
+		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		i++;
+	}
+	
 	
 }
 

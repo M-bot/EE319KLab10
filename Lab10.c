@@ -37,6 +37,12 @@ void Move_Away(uint8_t i,uint8_t toX, uint8_t toY);
 void Move_Directional(uint8_t i);
 void Update_Objects(uint8_t i);
 uint8_t Get_Next_Object(void);
+uint8_t Check_Room_Visited(uint8_t i);
+void Set_Room_Visited(void);
+uint8_t Set_Map_Index(uint8_t x,uint8_t y);
+void Remove_Visited_Sprites(void);
+uint8_t map_index;
+void Remove_All_Sprites(void);
 
 /*struct objects{
 	uint8_t ID;     
@@ -64,9 +70,6 @@ struct map_of_objects{
 	uint8_t visited;
 	uint8_t room_x;
 	uint8_t room_y;
-	
-	
-	
 };
 typedef struct map_of_objects mapo_t;
 mapo_t map_of_objects[25];
@@ -86,11 +89,12 @@ int main(void){
 	uint8_t Center = Get_Center();
 	uint8_t Current_Room[2]={Center,Center};
 	uint8_t Next_Object_Index;
-	Room_Init(Get_Map_Data(Current_Room[0],Current_Room[1]),Objects);
+	Room_Init(Get_Room_Data(Current_Room[0],Current_Room[1]),Objects);
 	uint8_t map_index=0;
 	map_of_objects[map_index].room_x=Current_Room[0];
 	map_of_objects[map_index].room_y=Current_Room[1];
-	
+	for(uint8_t i=0;i<25;i++)
+		map_of_objects[i].visited=0;
   while(1)
 	{
 		
@@ -98,16 +102,23 @@ int main(void){
 		for(int i=0;i<size;i++)
 			if(Objects[i].Takes_Damage==1 && Objects[i].ID!=0)
 				moverooms=0;
-			
-		if(moverooms)
+		for(int i=0;i<size;i++)
+				if(Objects[i].Arrow!=0 && Objects[i].ID!=0)
+					moverooms=0;
+		uint8_t achieved=0;
+		if(moverooms && fire_checker>20 && !achieved)
 		{
-			
-			if(Get_Room_Data(Current_Room[0]+1,Current_Room[1]-1)!=0)
+			achieved=1;
+			map_of_objects[map_index].visited=1;
+			if(Get_Room_Data(Current_Room[0]+1,Current_Room[1])!=0)
 			{
 				Next_Object_Index=Get_Next_Object();
 				Objects[Next_Object_Index].ID =Arrow_Left_Init();
 				Objects[Next_Object_Index].Arrow=1;
-				
+				Objects[Next_Object_Index].x=1;
+				Objects[Next_Object_Index].y=38;
+				Objects[Next_Object_Index].w=7;
+				Objects[Next_Object_Index].h=5;
 				
 			}
 			if(Get_Room_Data(Current_Room[0],Current_Room[1]+1)!=0)
@@ -115,20 +126,30 @@ int main(void){
 				Next_Object_Index=Get_Next_Object();
 				Objects[Next_Object_Index].ID =Arrow_Up_Init();
 				Objects[Next_Object_Index].Arrow=2;
-				
+				Objects[Next_Object_Index].x=68;
+				Objects[Next_Object_Index].y=1;
+				Objects[Next_Object_Index].w=5;
+				Objects[Next_Object_Index].h=7;
 			}
 			if(Get_Room_Data(Current_Room[0]-1,Current_Room[1])!=0)
 			{
 				Next_Object_Index=Get_Next_Object();
 				Objects[Next_Object_Index].ID =Arrow_Right_Init();
 				Objects[Next_Object_Index].Arrow=4;
-				
+				Objects[Next_Object_Index].x=137;
+				Objects[Next_Object_Index].y=38;
+				Objects[Next_Object_Index].w=7;
+				Objects[Next_Object_Index].h=5;
 			}
 			if(Get_Room_Data(Current_Room[0],Current_Room[1]-1)!=0)
 			{
 				Next_Object_Index=Get_Next_Object();
 				Objects[Next_Object_Index].ID =Arrow_Down_Init();
 				Objects[Next_Object_Index].Arrow=3;
+				Objects[Next_Object_Index].x=68;
+				Objects[Next_Object_Index].y=73;
+				Objects[Next_Object_Index].w=5;
+				Objects[Next_Object_Index].h=7;
 			}
 			
 		}
@@ -174,23 +195,39 @@ int main(void){
 								else if(Objects[i].Arrow!=0)
 								{
 									
+									Remove_All_Sprites();
+									Set_Room(Current_Room[0],Current_Room[1],1);
 									switch(Objects[i].Arrow)
 									{
+										//Set_Room_Visited();
 										case 1:
-											
+											Place(140-Get_Width(),40-(Get_Height()/2));
+											Current_Room[0]+=1;
 											break;
 										case 2:
-											
+											Place(70-(Get_Width()/2),80-(Get_Height()));
+											Current_Room[1]+=1;
 											break;
 										case 3:
-											
+											Place(70-(Get_Width()/2),1);
+											Current_Room[1]-=1;
 											break;
 										case 4:
-											
-											break;
-										
-											
+											Place(1,40-(Get_Height()/2));
+											Current_Room[0]-=1;
+											break;			
 									}
+									Room_Init(Get_Room_Data(Current_Room[0],Current_Room[1]),Objects);
+									Set_Room(Current_Room[0],Current_Room[1],0);
+									map_index=Set_Map_Index(Current_Room[0],Current_Room[1]);
+									//map_of_objects[map_index].visited=0;
+									if(Check_Room_Visited(map_index))
+										Remove_Visited_Sprites();
+									fire_checker=0;
+									
+										
+										
+									
 								}
 								else if(Objects[i].react==0 || Objects[i].react==4)
 								{
@@ -272,9 +309,8 @@ int main(void){
 			if(fire_ready)    //create shots
 			{
 				fire_ready=0;
-				uint8_t i=0;
-				while(Objects[i].ID!=0)
-					i++;
+				uint8_t i=Get_Next_Object();
+				
 				if((fire[0] || fire[1]) && (Fire_Shot()))
 					Create_Shot(fire[0],fire[1],&Objects[i]);
 				
@@ -450,7 +486,7 @@ void Move_Directional(uint8_t i)
 uint8_t Get_Next_Object(void)
 {
 	uint8_t i=0;
-	while(i!=0)
+	while(Objects[i].ID!=0)
 		i++;
 	     
 	Objects[i].xo=0;
@@ -482,6 +518,51 @@ uint8_t Get_Next_Object(void)
 	Objects[i].Stat_to_change=0; 
 	Objects[i].Stat_delta=0;
 	Objects[i].Arrow=0; 
+	Objects[i].Clearable=0;
 		
 	return i;
+}
+void Set_Room_Visited(void)
+{
+	map_of_objects[map_index].visited=1;
+}
+uint8_t Check_Room_Visited(uint8_t i)
+{
+	if(map_of_objects[i].visited==1)
+	{
+			return 1;
+	}
+	return 0;
+}
+void Remove_Visited_Sprites(void)
+{
+	for(int i=0;i<size;i++)
+		if(Objects[i].Clearable==1)
+			Objects[i].ID=RemoveSprite(Objects[i].ID);
+		
+}
+uint8_t Set_Map_Index(uint8_t x,uint8_t y)
+{
+	for(uint8_t i=0;i<25;i++)
+		if(map_of_objects[i].room_x==x && map_of_objects[i].room_y==y)
+			return i;
+	for(uint8_t i =0;i<25;i++)
+		{
+			if(map_of_objects[i].visited==0)
+			{
+				map_of_objects[i].room_x=x;
+				map_of_objects[i].room_y=y;
+				return i;
+			}
+		}
+}
+void Remove_All_Sprites(void)
+{
+	for(int i=0;i<size;i++)
+	{
+		if(Objects[i].ID!=0)
+			Objects[i].ID=RemoveSprite(Objects[i].ID);
+		
+	}
+	
 }

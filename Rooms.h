@@ -32,6 +32,7 @@ struct objects{
 	uint8_t Stat_to_change; //1=damage 2=fire_rate 3=Speed 4=Shot_Speed 5=Range 6=Max_Health 7=Current_Health
 	uint8_t Stat_delta;
 	uint8_t Arrow; //1=Left 2=UP 3=Down 4=right
+	uint8_t Clearable; //0 if should be removed if room cleared, 1 if not
 };
 
-void Room_Init(uint8_t num,objects_t Objects[30]);
+void Room_Init(uint8_t num,objects_t Objects[100]);

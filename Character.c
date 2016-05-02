@@ -87,7 +87,7 @@ uint8_t Current_Fire_Rate;
 
 void Character_Init(void)
 {
-		Range=25;
+		Range=30;
 		Damage = 2;
 		Fire_Rate = 5;
 		Current_Fire_Rate=0;
