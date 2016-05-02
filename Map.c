@@ -15,7 +15,7 @@ uint8_t map[MAP_DATA_SIZE][MAP_DATA_SIZE];
  
 
 uint8_t decays[4];
-int8_t dir[4][2] = {{-1,0},{1,0},{0,1},{0,-1}};
+const int8_t dir[4][2] = {{-1,0},{1,0},{0,1},{0,-1}};
  
 void Spread_Rooms(int8_t x, int8_t y, uint8_t first) {
 	if(x < 0 || x > MAP_DATA_SIZE || y < 0 || y > MAP_DATA_SIZE) return;

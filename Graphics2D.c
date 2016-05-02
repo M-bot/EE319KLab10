@@ -281,7 +281,7 @@ void DrawMap(void) {
 	for(int x = 0; x < MAP_DATA_SIZE; x++) {
 		for(int y = 0; y < MAP_DATA_SIZE; y++) {
 			uint8_t data = Get_Map_Data(x,y);
-			DrawBorderRect(MAP_CENTER_X-(MAP_SIZE+MAP_SIZE*2*(x-MAP_DATA_SIZE/2)),MAP_CENTER_Y-(MAP_SIZE/2+MAP_SIZE*(y-MAP_DATA_SIZE/2)),MAP_SIZE*2,MAP_SIZE,map_colors[data],map_bcolors[data]);
+			DrawBorderRect(MAP_CENTER_X-(MAP_SIZE+MAP_SIZE*2*(MAP_DATA_SIZE/2-x)),MAP_CENTER_Y-(MAP_SIZE/2+MAP_SIZE*(MAP_DATA_SIZE/2-y)),MAP_SIZE*2,MAP_SIZE,map_colors[data],map_bcolors[data]);
 		}
 	}
 }

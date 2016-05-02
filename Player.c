@@ -7,8 +7,6 @@
 #include "Graphics2D.h"
 #include "5Pos_Switch.h"
 
-#define PLAYER_WIDTH 11
-#define PLAYER_HEIGHT 14
 #define FIRE_WIDTH 11
 #define FIRE_HEIGHT 14
 
@@ -49,10 +47,10 @@ void PlayerCreate(Object *this) {
 	(*this).isPassable = 0;
 	(*this).isRendered = 1;
 	(*this).logic = PlayerLogic;
-	(*this).velocity = 14;	
+	(*this).velocity = 22;	
 	(*this).currentHealth = 6;		
 	(*this).maxHealth = 6;
-	(*this).bulletVelocity = 18;
+	(*this).bulletVelocity = 30;
 	(*this).bulletRange = 3000;
 	(*this).bulletDamage = 1;
 	(*this).bulletCooldown = 25;

@@ -16,6 +16,7 @@ struct Object {
 	Object *collidedWith;
 	uint8_t isRendered;
 	void(*logic)(Object *this, Object *player, uint64_t delta);
+	void(*onremove)(void);
 	int32_t variables[10];
 };
 
@@ -26,3 +27,9 @@ Object* RequestObject(uint8_t isPlayer);
 void ObjectLogic(Object *this, Object *player, uint64_t delta);
 void ObjectRevert(Object *this);
 #endif
+
+#include "Player.h"
+#include "Rock.h"
+#include "Spike.h"
+#include "Horf.h"
+#include "AttackFly.h"

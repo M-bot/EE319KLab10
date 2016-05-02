@@ -18,7 +18,7 @@
 #define damage variables[3]
 #define origin variables[4]
 
-void(*enemies[ENEMY_SIZE])(Object *this, Object *player, uint64_t delta) = {HorfLogic, AttackFlyLogic};
+void(*const enemies[ENEMY_SIZE])(Object *this, Object *player, uint64_t delta) = {HorfLogic, AttackFlyLogic};
 
 const unsigned short bullet[] = {
  0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF, 0xBC8E, 0xFFFA, 0xF779, 0xBC8E, 0xBC8E, 0xF779, 0xF779, 0xBC8E, 0xFFFF, 0xBC8E, 0xBC8E, 0xFFFF,
