@@ -200,17 +200,18 @@ uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, u
 	sprites[x].y = initialy;
 	sprites[x].unique = GetNextUnique();
 	ssize++;
-	return sunique;
+	return sprites[x].unique;
 }
 // Returns the next available unique to avoid conflicts
 uint8_t GetNextUnique(void) {
+	uint32_t n = 0;
 	for(int x = 0; x < MAX_SPRITES; x++) {
-		if(sprites[x].unique != sunique+1) {
-			if(sunique == -1) continue;
-			return sunique+=1;
+		if(n == sprites[x].unique) {
+			n++;
+			x = -1;
 		}
 	}
-	return -1;
+	return n;
 }
 
 // Updates the positional data of a given sprite from a unique value
@@ -233,7 +234,7 @@ uint8_t RemoveSprite(uint8_t unique) {
 			sprites[x].height = 0;
 			sprites[x].x = 0;
 			sprites[x].y = 0;
-			sprites[x].unique = -1;
+			sprites[x].unique = 0;
 			ssize--;
 			return 0;
 		}
