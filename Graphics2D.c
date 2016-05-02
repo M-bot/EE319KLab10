@@ -121,7 +121,7 @@ uint16_t pixels[ROOM_WIDTH*ROOM_HEIGHT];
 // Change to vector later
 Sprite sprites[MAX_SPRITES];
 uint8_t ssize = 0;
-uint8_t sunique = 0;
+uint32_t sunique = 1;
 uint8_t updatestatus = 0;
 uint8_t door = 0;
 uint8_t max_hearts = 0;
@@ -205,9 +205,9 @@ uint8_t AddSprite(const unsigned short * image, uint8_t width, uint8_t height, u
 // Returns the next available unique to avoid conflicts
 uint8_t GetNextUnique(void) {
 	for(int x = 0; x < MAX_SPRITES; x++) {
-		if(sprites[x].unique != ++sunique) {
+		if(sprites[x].unique != sunique+1) {
 			if(sunique == -1) continue;
-			return sunique;
+			return sunique+=1;
 		}
 	}
 	return -1;

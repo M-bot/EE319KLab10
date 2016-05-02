@@ -29,10 +29,10 @@ struct objects{
 	uint8_t Takes_Damage; //does it take damage?
 	uint8_t Damage_To_Deal; //How much health to take off on a hit
 	uint8_t Player; //is a players shot 0=false 1=true
-	uint8_t Stat_to_change; //1=damage 2=fire_rate 3=Speed 4=Shot_Speed 5=Range 6=Max_Health 7=Current_Health
-	uint8_t Stat_delta;
 	uint8_t Arrow; //1=Left 2=UP 3=Down 4=right
 	uint8_t Clearable; //0 if should be removed if room cleared, 1 if not
+	void(*Update)(void); // method to call to update stats
+	uint8_t Item; //boolean for item logic
 };
 
 void Room_Init(uint8_t num,objects_t Objects[100]);

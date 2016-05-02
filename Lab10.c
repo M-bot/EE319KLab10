@@ -167,22 +167,23 @@ int main(void){
 		if(mov_ready ==1)                                      //move player and any moving objects
 		{
 		Move(mov[0],mov[1],move_checker);
-			if(mov[0]!=0 && mov[1]!=0)
+			if(mov[0]!=0 || mov[1]!=0)
 			{
 				if(move_sprite==1)
 				{		
-						
+						Sprite_Move_1();
 						move_sprite=2;
 				}
 				else if(move_sprite==2)
 				{	
+					Sprite_Move_2();
 					move_sprite=1;
 				}
 			}
 			else
 			{
 				move_sprite=1;
-				
+				Sprite_Still();
 			}
 		mov_ready=0;
 			for(int i =0;i<size;i++)
@@ -247,7 +248,7 @@ int main(void){
 											}
 											break;
 										case 4:
-											if((!GPIO_PORTB_DATA_R)&0x08)
+											if(mov[0]==1)
 											{
 											Place(1,40-(Get_Height()/2));
 											Current_Room[0]-=1;
@@ -284,9 +285,9 @@ int main(void){
 									invinc=20;
 									Objects[i].ID=RemoveSprite(Objects[i].ID);
 								}
-								else if(Objects[i].Stat_to_change!=0)                                    //code for detecting items to be picked up
+								else if(Objects[i].Item==1)                                    //code for detecting items to be picked up
 								{
-									Update_Stats(Objects[i].Stat_to_change,Objects[i].Stat_delta);
+									(*Objects[i].Update)();
 									Objects[i].ID=RemoveSprite(Objects[i].ID);
 								}
 								
@@ -354,10 +355,14 @@ int main(void){
 			if(fire_ready)    //create shots
 			{
 				fire_ready=0;
-				uint8_t i=Get_Next_Object();
+				
 				
 				if((fire[0] || fire[1]) && (Fire_Shot()))
+				{
+					uint8_t i=Get_Next_Object();
 					Create_Shot(fire[0],fire[1],&Objects[i]);
+					
+				}
 				
 				for(int i=0;i<size;i++)
 				{
@@ -367,8 +372,7 @@ int main(void){
 						if(Objects[i].Fire_Tick==Objects[i].Fire_Rate)
 						{
 							uint8_t j=0;
-							while(Objects[j].ID!=0)
-								j++;
+							j=Get_Next_Object();
 							uint8_t cx=Get_x();
 							uint8_t cy=Get_y();
 							uint8_t cw=Get_Width();
@@ -515,9 +519,9 @@ void Move_Directional(uint8_t i)
 		Objects[i].ID=RemoveSprite(Objects[i].ID);
 	Objects[i].Last_x = Objects[i].x;
 	Objects[i].Last_y = Objects[i].y;
-	if( (Objects[i].x+Objects[i].veli>140) || (Objects[i].x+Objects[i].veli<0))
-	Objects[i].ID=RemoveSprite(Objects[i].ID);
-	else if( (Objects[i].y+Objects[i].velj>80) || (Objects[i].y+Objects[i].velj<0))
+	if( (Objects[i].x+Objects[i].veli>140) || (Objects[i].x+Objects[i].veli<1))
+		Objects[i].ID=RemoveSprite(Objects[i].ID);
+	else if( (Objects[i].y+Objects[i].velj>80) || (Objects[i].y+Objects[i].velj<1))
 		Objects[i].ID=RemoveSprite(Objects[i].ID);
 	else
 	{
@@ -530,10 +534,13 @@ void Move_Directional(uint8_t i)
 }
 uint8_t Get_Next_Object(void)
 {
-	uint8_t i=0;
+	uint8_t i=99;
 	while(Objects[i].ID!=0)
-		i++;
-	     
+		i--;
+	if(Objects[i].ID==0)
+	{
+		ADC_In();
+	}
 	Objects[i].xo=0;
 	Objects[i].rangex=0;
 	Objects[i].rangey=0;
@@ -560,11 +567,11 @@ uint8_t Get_Next_Object(void)
 	Objects[i].Takes_Damage=0; 
 	Objects[i].Damage_To_Deal=0; 
 	Objects[i].Player=0; 
-	Objects[i].Stat_to_change=0; 
-	Objects[i].Stat_delta=0;
 	Objects[i].Arrow=0; 
 	Objects[i].Clearable=0;
-		
+	Objects[i].Update=0; // method to call to update stats
+	Objects[i].Item=0; //boolean for item logic
+	RemoveSprite(Objects[i].ID);	
 	return i;
 }
 void Set_Room_Visited(void)

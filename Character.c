@@ -196,7 +196,7 @@ void Move(int8_t x,int8_t y,uint8_t move_checker)
 		Last_x= Current_x;
 		Current_x += x*Speed;
 	}
-	if( (Current_y+Height + y*Speed)<=80 && (int8_t)(Current_y + y*Speed)>=0)
+	if( (Current_y+Height + y*Speed)<=80 && (int8_t)(Current_y + y*Speed)>=1)
 	{
 		/*if(x!=0 && y!=0)
 		{
@@ -367,4 +367,49 @@ void Update_Stats(uint8_t code, uint8_t delta)
 			break;
 	}
 
+}
+void Update_Damage(int8_t delta)
+{
+	Damage+=delta;
+}
+void Update_Fire_Rate(int8_t delta)
+{
+	Fire_Rate+=delta;
+}
+void Update_Speed(int8_t delta)
+{
+	Speed+=delta;
+}
+void Update_Shot_Speed(int8_t delta)
+{
+	Shot_Speed+=delta;
+}
+void Update_Range(int8_t delta)
+{
+	Range+=delta;
+}
+void Update_Max_Health(int8_t delta)
+{
+	Max_Health+=delta;
+}
+void Update_Current_Health(int8_t delta)
+{
+	Current_Health+=delta;
+}
+void Sprite_Move_1(void)
+{
+	RemoveSprite(ID);
+	ID=AddSprite(Character_Move_1,Width,Height,Current_x,Current_y);
+	
+}
+void Sprite_Move_2(void)
+{
+	RemoveSprite(ID);
+	ID=AddSprite(Character_Move_2,Width,Height,Current_x,Current_y);
+	
+}
+void Sprite_Still(void)
+{
+	RemoveSprite(ID);
+	ID=AddSprite(Character,Width,Height,Current_x,Current_y);
 }

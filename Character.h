@@ -32,3 +32,20 @@ uint8_t Fire_Shot(void);
 
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o);
 void Update_Stats(uint8_t code, uint8_t delta);
+void Update_Damage(int8_t delta);
+
+void Update_Fire_Rate(int8_t delta);
+
+void Update_Speed(int8_t delta);
+
+void Update_Shot_Speed(int8_t delta);
+
+void Update_Range(int8_t delta);
+
+void Update_Max_Health(int8_t delta);
+void Update_Current_Health(int8_t delta);
+
+void Sprite_Still(void);
+void Sprite_Move_2(void);
+
+void Sprite_Move_1(void);

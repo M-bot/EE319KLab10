@@ -47,7 +47,7 @@ void Map_Generate(void) {
 	for(int y = 0; y < MAP_DATA_SIZE; y++) {
 		for(int x = 0; x < MAP_DATA_SIZE; x++) {
 			if(map[y][x] > 0) {
-				map[y][x] |= 0x80;
+				map[y][x] |= 0x80;//remove to make hidden
 			}
 		}
 	}
