@@ -197,30 +197,51 @@ int main(void){
 								}
 								else if(Objects[i].Arrow!=0)
 								{
-									
-									Remove_All_Sprites();
-									Set_Room(Current_Room[0],Current_Room[1],1);
-									Set_Room(Current_Room[0],Current_Room[1],2);
+									uint8_t moved=0;
+									uint8_t save1=Current_Room[0];
+										uint8_t save2=Current_Room[1];
 									switch(Objects[i].Arrow)
 									{
 										//Set_Room_Visited();
+										
 										case 1:
+											if(mov[0]==-1)
+											{
 											Place(140-Get_Width(),40-(Get_Height()/2));
 											Current_Room[0]+=1;
+												moved=1;
+											}
 											break;
 										case 2:
+											if(mov[1]==-1)
+											{
 											Place(70-(Get_Width()/2),80-(Get_Height()));
 											Current_Room[1]+=1;
+												moved=1;
+											}
 											break;
 										case 3:
+											if(mov[1]==1)
+											{
 											Place(70-(Get_Width()/2),1);
 											Current_Room[1]-=1;
+												moved=1;
+											}
 											break;
 										case 4:
+											if((!GPIO_PORTB_DATA_R)&0x08)
+											{
 											Place(1,40-(Get_Height()/2));
 											Current_Room[0]-=1;
+												moved=1;
+											}
 											break;			
 									}
+									if(moved)
+									{
+									Remove_All_Sprites();
+									Set_Room(save1,save2,1);
+									Set_Room(save1,save2,2);
 									Room_Init(Get_Room_Data(Current_Room[0],Current_Room[1]),Objects);
 									Set_Room(Current_Room[0],Current_Room[1],0);
 									map_index=Set_Map_Index(Current_Room[0],Current_Room[1]);
@@ -228,6 +249,8 @@ int main(void){
 									if(Check_Room_Visited(map_index))
 										Remove_Visited_Sprites();
 									fire_checker=0;
+									UpdateMap();
+									}
 									
 										
 										

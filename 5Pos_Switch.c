@@ -36,4 +36,8 @@ void Fire_In(uint8_t arr[2])
   arr[0] =    ((Data&(0x08))>>3) + ((Data&(0x01))*-1);
 	arr[1] =    (((Data&(0x02))>>1)*(-1)) + (((Data&(0x04))>>2));
 }
+uint32_t Get_Data(void)
+{
+	return GPIO_PORTB_DATA_R;
+}
 	
