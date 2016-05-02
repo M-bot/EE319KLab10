@@ -197,6 +197,7 @@ int main(void){
 									
 									Remove_All_Sprites();
 									Set_Room(Current_Room[0],Current_Room[1],1);
+									Set_Room(Current_Room[0],Current_Room[1],2);
 									switch(Objects[i].Arrow)
 									{
 										//Set_Room_Visited();
