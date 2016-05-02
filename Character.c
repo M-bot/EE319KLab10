@@ -8,6 +8,7 @@
 #define PI 3.141592654
 #include "Rooms.h"
 #include "Shot.h"
+#include "SoundController.h"
 
 #define LEFT -1;
 #define STAY 0;
@@ -222,14 +223,14 @@ void Place(int8_t x,int8_t y)
 }
 void Damage_Player(void)
 {
+	Sound_Send(1);
+		Current_Health--;
+		UpdateHeart(Max_Health,Current_Health);
+	
 	if(Current_Health==0)
 	{
 		RemoveSprite(ID);
 		UpdateHeart(6,0);
-	}
-	else {
-		Current_Health--;
-		UpdateHeart(Max_Health,Current_Health);
 	}
 	
 }
@@ -268,6 +269,7 @@ uint8_t Fire_Shot(void)
 }
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 {
+	Sound_Send(2);
 	uint8_t x =  Current_x;
 	uint8_t y = Current_y;
 	if(xdir==-1 & ydir ==1)

@@ -16,6 +16,8 @@
 #include "Shot.h"
 #include "Map.h"
 #include "Splash.h"
+#include "UART.h"
+#include "SoundController.h"
 
 
 #define PI 3.141592654
@@ -88,6 +90,7 @@ int main(void){
 	while(mov[0] == 0 && mov[1] == 0);
 	InitDraw();
 	ADC_Init();         // turn on ADC, set channel to 1
+	UART_Init();
 	Character_Init();
 	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
 	uint8_t Center = Get_Center();
@@ -112,6 +115,7 @@ int main(void){
 		uint8_t achieved=0;
 		if(moverooms && fire_checker>20 && !achieved)
 		{
+			Sound_Send(3);
 			achieved=1;
 			map_of_objects[map_index].visited=1;
 			if(Get_Room_Data(Current_Room[0]+1,Current_Room[1])!=0)
