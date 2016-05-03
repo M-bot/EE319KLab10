@@ -30,7 +30,7 @@ void Spread_Rooms(int8_t x, int8_t y, uint8_t first) {
 			Spread_Rooms(dx, dy, 0);
 		}
 	}
-	map[y][x] = first ? 1 : RandomInteger(1)+2; // Change to actual number of possible rooms
+	map[y][x] = first ? 1 : RandomInteger(5)+1; // Change to actual number of possible rooms
 }
  
 void Map_Generate(void) {

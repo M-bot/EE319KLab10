@@ -138,9 +138,11 @@ uint8_t Last_x;
 uint8_t Last_y;
 uint8_t Range;
 uint8_t Current_Fire_Rate;
+uint32_t Score;
 
 void Character_Init(void)
 {
+		Score=0;
 		Range=30;
 		Damage = 2;
 		Fire_Rate = 5;
@@ -223,16 +225,20 @@ void Place(int8_t x,int8_t y)
 }
 void Damage_Player(void)
 {
-	Sound_Send(1);
+	//for(uint32_t i;i<20;i++)
+		Sound_Send(2);
 		Current_Health--;
 		UpdateHeart(Max_Health,Current_Health);
 	
 	if(Current_Health==0)
 	{
 		RemoveSprite(ID);
-		UpdateHeart(6,0);
+		//UpdateHeart(6,0);
+		Output_Clear();
+		LCD_OutDec(Score);
+		while(1);
 	}
-	
+	Sound_Stop();
 }
 uint8_t Get_Last_x(void)
 {
@@ -269,7 +275,8 @@ uint8_t Fire_Shot(void)
 }
 void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 {
-	Sound_Send(2);
+	//for(uint8_t i;i<20;i++)
+		Sound_Send(3);
 	uint8_t x =  Current_x;
 	uint8_t y = Current_y;
 	if(xdir==-1 & ydir ==1)
@@ -330,7 +337,7 @@ void Create_Shot(int8_t xdir,int8_t ydir,objects_t *o)
 	o->rangey=Range;
 	RemoveSprite(ID);
 	ID=AddSprite(Character_Firing,Width,Height,Current_x,Current_y);
-	
+	Sound_Stop();
 }
 uint8_t Get_Width(void)
 {
@@ -414,4 +421,8 @@ void Sprite_Still(void)
 {
 	RemoveSprite(ID);
 	ID=AddSprite(Character,Width,Height,Current_x,Current_y);
+}
+void Update_Score(uint32_t delta)
+{
+	Score+=delta;
 }

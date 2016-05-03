@@ -49,3 +49,4 @@ void Sprite_Still(void);
 void Sprite_Move_2(void);
 
 void Sprite_Move_1(void);
+void Update_Score(uint32_t delta);

@@ -17,3 +17,14 @@ uint8_t Arrow_Right_Init();
 uint8_t Arrow_Up_Init();
 uint8_t Arrow_Left_Init();
 uint8_t Arrow_Down_Init();
+
+uint8_t Horf_Init(uint8_t x,uint8_t y);
+uint8_t Fatty_Init(uint8_t x,uint8_t y);
+
+uint8_t Attack_Fly_Init(uint8_t x,uint8_t y);
+
+void Fatty_Get_Logic(objects_t *o) ;
+
+void Attack_Fly_Logic(objects_t *o) ;
+
+void Horf_Get_Logic(objects_t *o) ;

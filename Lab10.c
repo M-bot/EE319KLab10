@@ -47,6 +47,8 @@ void Remove_Visited_Sprites(void);
 uint8_t map_index;
 void Remove_All_Sprites(void);
 uint8_t move_sprite;
+ 
+
 
 /*struct objects{
 	uint8_t ID;     
@@ -91,6 +93,7 @@ int main(void){
 	InitDraw();
 	ADC_Init();         // turn on ADC, set channel to 1
 	UART_Init();
+	Sound_Init();
 	Character_Init();
 	Map_Init(ADC_In()+GPIO_PORTB_DATA_R); //This is so the random number generator actually generates a different map
 	uint8_t Center = Get_Center();
@@ -115,7 +118,8 @@ int main(void){
 		uint8_t achieved=0;
 		if(moverooms && fire_checker>20 && !achieved)
 		{
-			Sound_Send(3);
+			//for(uint32_t i;i<20;i++)
+			Sound_Send(4);
 			achieved=1;
 			map_of_objects[map_index].visited=1;
 			if(Get_Room_Data(Current_Room[0]+1,Current_Room[1])!=0)
@@ -159,7 +163,7 @@ int main(void){
 				Objects[Next_Object_Index].w=5;
 				Objects[Next_Object_Index].h=7;
 			}
-			
+			Sound_Stop();
 		}
 		
 		Render();
@@ -328,7 +332,11 @@ int main(void){
 										{
 											Objects[j].Current_Health-=Objects[i].Damage_To_Deal;
 												if(Objects[j].Current_Health<=0)
+												{
+													Update_Score(Objects[j].Score);
 													Objects[j].ID=RemoveSprite(Objects[j].ID);
+													
+												}
 											Objects[i].ID=RemoveSprite(Objects[i].ID);
 									
 										}

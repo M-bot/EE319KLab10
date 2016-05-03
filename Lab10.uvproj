@@ -500,6 +500,11 @@
               <FileType>1</FileType>
               <FilePath>.\SoundController.c</FilePath>
             </File>
+            <File>
+              <FileName>Items.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Items.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -539,6 +544,21 @@
               <FileName>Map.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Map.h</FilePath>
+            </File>
+            <File>
+              <FileName>Rooms.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Rooms.h</FilePath>
+            </File>
+            <File>
+              <FileName>Chaser.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Chaser.h</FilePath>
+            </File>
+            <File>
+              <FileName>Sound.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Sound.h</FilePath>
             </File>
           </Files>
         </Group>

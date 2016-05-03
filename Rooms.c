@@ -12,6 +12,7 @@
 #include "Timer0.h"
 #include "Chaser.h"
 #include "Pooter.h"
+#include "Items.h"
 
 struct objects{
 	uint8_t ID;     
@@ -45,6 +46,7 @@ struct objects{
 	uint8_t Clearable; //0 if should be removed if room cleared, 1 if not
 	void(*Update)(void); // method to call to update stats
 	uint8_t Item; //boolean for item logic
+	uint32_t Score;
 };
 typedef struct objects objects_t;
 
@@ -108,43 +110,56 @@ void Room_Init(uint8_t num,objects_t Objects[100])
 		Objects[i].y=80-Objects[i].h;
 		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
 		i++;
-		Objects[i].x=2;
-		Objects[i].y=30;
-		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
-		Pooter_Get_Logic(&Objects[i]);
-		i++;
-
+	
 		
 	
 		
 	}
 	if(num==2)
 	{
-		Objects[i].x=10;
-		Objects[i].y=10;
-		Objects[i].ID=Chaser_Init(Objects[i].x,Objects[i].y);
-		Chaser_Get_Logic(&Objects[i]);
+		Objects[i].x=65;
+		Objects[i].y=30;
+		Objects[i].ID=Fatty_Init(Objects[i].x,Objects[i].y);
+		Fatty_Get_Logic(&Objects[i]);
 		i++;
 	}
 	if(num==3)
 	{
-		Objects[i].x=10;
-		Objects[i].y=10;
-		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
-		Pooter_Get_Logic(&Objects[i]);
+		Objects[i].x=65;
+		Objects[i].y=30;
+		Objects[i].ID=Heart_Item_Init(Objects[i].x,Objects[i].y);
+		Heart_Item_Get_Logic(&Objects[i]);
+		i++;
+		Objects[i].x=65;
+		Objects[i].y=40;
+		Objects[i].ID=Pedestal_Init(Objects[i].x,Objects[i].y);
+		Pedestal_Get_Logic(&Objects[i]);
 		i++;
 	}
 	if(num==4)
 	{
-		Objects[i].x=10;
-		Objects[i].y=10;
+		Objects[i].x=1;
+		Objects[i].y=1;
 		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
 		Pooter_Get_Logic(&Objects[i]);
 		i++;
-		Rock_Get_Logic(&(Objects[i]));
+		Pooter_Get_Logic(&(Objects[i]));
 		Objects[i].x=1;
 		Objects[i].y=80-Objects[i].h;
-		Objects[i].ID=Rock_Init(Objects[i].x,Objects[i].y);
+		Objects[i].ID=Pooter_Init(Objects[i].x,Objects[i].y);
+		i++;
+	}
+	if(num==5)
+	{
+		Chaser_Get_Logic(&Objects[i]);
+		Objects[i].x=65;
+		Objects[i].y=30;
+		Objects[i].ID=Chaser_Init(Objects[i].x,Objects[i].y);
+		i++;
+		Chaser_Get_Logic(&(Objects[i]));
+		Objects[i].x=65;
+		Objects[i].y=50;
+		Objects[i].ID=Chaser_Init(Objects[i].x,Objects[i].y);
 		i++;
 	}
 	

@@ -3,6 +3,21 @@
 #include "UART.h"
 
 // Requests to start playing the given sound as background music
+void Sound_Init()
+{
+	int delay=0;
+	SYSCTL_RCGCGPIO_R |= 0x20;
+	delay = SYSCTL_RCGCGPIO_R;
+	GPIO_PORTF_DIR_R |=  0x0E;
+	//GPIO_PORTD_DIR_R |= 0x80;
+	GPIO_PORTF_DEN_R |= 0x0E;
+	//GPIO_PORTD_DEN_R |= 0x80;
+	GPIO_PORTF_AFSEL_R &= ~0x0E;
+//	GPIO_PORTD_AFSEL_R &= 0x80;
+	GPIO_PORTF_AMSEL_R &= ~0x0E;
+	GPIO_PORTF_PCTL_R &= ~0x0000FFF0;
+
+}
 void BGM_Start(uint8_t sound) {
 	Sound_Transmit(sound,2);
 }
@@ -14,7 +29,10 @@ void BGM_Stop(void) {
 
 // Requests to play a sound
 void Sound_Send(uint8_t sound) {
-	Sound_Transmit(sound,0);
+	GPIO_PORTF_DATA_R |= 0x08;
+	GPIO_PORTF_DATA_R &= ~0x06;
+	GPIO_PORTF_DATA_R |= (sound-1)<<1;
+	
 }
 
 // Requests to play and then loop a sound
@@ -24,7 +42,7 @@ void Sound_Loop(uint8_t sound) {
 
 // Requests to stop sound
 void Sound_Stop(void) {
-	Sound_Transmit(0,0);
+	GPIO_PORTF_DATA_R &= ~0x08;
 }
 
 // Internal use only

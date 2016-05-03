@@ -16,3 +16,4 @@ void Sound_Play(const uint8_t *pt, uint32_t count, uint8_t lp);
 void Sound_BGM_Play(const uint8_t *pt, uint32_t count);
 uint8_t Sound_Ready(void);
 uint8_t Decode(Sound *cc);
+void Sound_Init();

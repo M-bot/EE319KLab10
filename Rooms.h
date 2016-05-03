@@ -33,6 +33,7 @@ struct objects{
 	uint8_t Clearable; //0 if should be removed if room cleared, 1 if not
 	void(*Update)(void); // method to call to update stats
 	uint8_t Item; //boolean for item logic
+	uint32_t Score;
 };
 
 void Room_Init(uint8_t num,objects_t Objects[100]);
