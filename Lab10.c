@@ -475,6 +475,11 @@ void Timer0A_Run(void){
 	
 }
 
+
+void UART1_Handler(void){
+	UART1_ICR_R = 0x10; // Acknowledge 
+}
+
 void Move_Towards(uint8_t i,uint8_t toX, uint8_t toY)   //this does not include pathing...
 {
 	Objects[i].Last_x = Objects[i].x;
